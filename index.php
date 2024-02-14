@@ -74,10 +74,9 @@
                 break;
 
             default:
-//                $error404 = new View('Erreur 404');
-//                $error404->render('error404');
-                throw new Exception("La page demandée n'existe pas.");
+                Utils::redirect('home');
         }
+
     } catch (Exception $e) {
         $errorView = new View('');
         $errorView->render('errorPage', ['errorMessage' => $e->getMessage()]);
