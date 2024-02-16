@@ -14,7 +14,6 @@ class User extends AbstractEntity
     private string $email;
     private string $password;
     private ?string $image = null;
-    private ?DateTime $creationDate = null;
 
     public function setUsername(string $username): void
     {
@@ -54,37 +53,5 @@ class User extends AbstractEntity
     public function getImage(): ?string
     {
         return $this->image;
-    }
-
-    /**
-     * Défini la date de création de l'utilisateur.
-     *
-     * @param string|DateTime $creationDate La date de création à définir. Il peut s'agir d'une chaîne ou d'un objet DateTime.
-     * @param string $format Le format de la représentation sous forme de chaîne de la date lorsque $creationDate est une chaîne.
-     * @retour void
-     * @throws InvalidArgumentException Si $creationDate est une chaîne et que le format n'est pas valide.
-     */
-    public function setCreationDate(string|DateTime $creationDate, string $format = 'Y-m-d H:i:s'): void
-    {
-        if (is_string($creationDate)) {
-            $parsedDate = DateTime::createFromFormat($format, $creationDate);
-
-            if ($parsedDate === false) {
-                throw new InvalidArgumentException("Format de date invalide. Le format attendu est $format");
-            }
-
-            $creationDate = $parsedDate;
-        }
-        $this->creationDate = $creationDate;
-    }
-
-    public function getCreationDateString(): string
-    {
-        return $this->creationDate->format('Y-m-d H:i:s');
-    }
-
-    public function getCreationDate(): ?DateTime
-    {
-        return $this->creationDate;
     }
 }

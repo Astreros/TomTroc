@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\NoReturn;
+
 class UserController
 {
     /**
@@ -50,7 +52,7 @@ class UserController
     /**
      * @throws Exception
      */
-    public function loginUser(): User
+    #[NoReturn] public function loginUser(): void
     {
         $email = Utils::request('email');
         $password = Utils::request('password');
@@ -70,10 +72,7 @@ class UserController
             exit();
         }
 
-
         $_SESSION['user'] = $user;
-
-
 
         Utils::redirect('userAccount');
     }
@@ -146,7 +145,7 @@ class UserController
         }
     }
 
-    public function disconnectUser()
+    #[NoReturn] public function disconnectUser(): void
     {
         unset($_SESSION['user']);
 

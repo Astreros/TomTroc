@@ -55,7 +55,7 @@ class UserManager extends AbstractEntityManager
     {
         $statement = "SELECT Id_users AS id, username, email, password, image, creation_date FROM users WHERE email = :email";
 
-        $result = $this->database->query($statement,['email' => $email]);
+        $result = $this->database->query($statement, ['email' => $email]);
         $user = $result->fetch();
 
         if($user) {

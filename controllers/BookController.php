@@ -23,4 +23,9 @@ class BookController
         $view = new View('Modifier un livre');
         $view->render('userBook');
     }
+
+    public function getAllAvailableBooks(): array
+    {
+        return [];
+    }
 }
