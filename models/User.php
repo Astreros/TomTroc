@@ -14,7 +14,7 @@ class User extends AbstractEntity
     private string $email;
     private string $password;
     private ?string $image = null;
-    private ?DateTime $creationDate;
+    private ?DateTime $creationDate = null;
 
     public function setUsername(string $username): void
     {
@@ -46,12 +46,12 @@ class User extends AbstractEntity
         return $this->password;
     }
 
-    public function setImage(string $image): void
+    public function setImage(?string $image): void
     {
         $this->image = $image;
     }
 
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }
@@ -78,7 +78,12 @@ class User extends AbstractEntity
         $this->creationDate = $creationDate;
     }
 
-    public function getCreationDate(): DateTime
+    public function getCreationDateString(): string
+    {
+        return $this->creationDate->format('Y-m-d H:i:s');
+    }
+
+    public function getCreationDate(): ?DateTime
     {
         return $this->creationDate;
     }

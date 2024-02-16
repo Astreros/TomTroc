@@ -1,7 +1,7 @@
 <?php
 
-    require_once './config/config.php';
     require_once './config/autoload.php';
+    require_once './config/config.php';
 
     // L'action demandée par l'utilisateur.
     $action = Utils::request('action', 'home');
@@ -32,14 +32,24 @@
                 $publicPageController->showPublicUserAccount();
                 break;
 
-            case 'login':
+            case 'loginForm':
                 $userController = new UserController();
                 $userController->showLoginForm();
                 break;
 
-            case 'registration':
+            case 'registrationForm':
                 $userController = new UserController();
                 $userController->showRegistrationForm();
+                break;
+
+            case 'login':
+                $userController = new UserController();
+                $userController->loginUser();
+                break;
+
+            case 'registration':
+                $userController = new UserController();
+                $userController->registrationUser();
                 break;
 
             case 'privacyPolicy':
@@ -71,6 +81,11 @@
             case 'messaging':
                 $messagingController = new MessagingController();
                 $messagingController->showMessaging();
+                break;
+
+            case 'disconnect':
+                $userController = new UserController();
+                $userController->disconnectUser();
                 break;
 
             default:

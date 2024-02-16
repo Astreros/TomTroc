@@ -75,4 +75,11 @@ class Utils
 
         return $finalString;
     }
+
+    public static function checkIfUserIsConnected(): void
+    {
+        if(!isset($_SESSION['user'])) {
+            self::redirect("loginForm");
+        }
+    }
 }

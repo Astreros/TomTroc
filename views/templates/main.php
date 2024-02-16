@@ -18,7 +18,16 @@
 
     <body>
         <header>
-            <p>Ici le header.</p>
+            <?php
+                if (isset($_SESSION['user'])) {
+                    echo "VOTRE COMPTE " . $_SESSION['user']->getUsername();
+                    ?>
+                    <a href="index.php?action=disconnect">Déconnexion</a>
+                    <?php
+                } else {
+                    echo "CONNEXION";
+                }
+            ?>
         </header>
 
         <main>
@@ -32,8 +41,8 @@
                     <li><a href="index.php?action=library">Nos livres à l'échange</a></li>
                     <li><a href="index.php?action=bookDetails">Détails d'un livre</a></li>
                     <li><a href="index.php?action=publicUserAccount">Compte public utilisateur</a></li>
-                    <li><a href="index.php?action=login">Formulaire de connexion</a></li>
-                    <li><a href="index.php?action=registration">Formulaire d'inscription</a></li>
+                    <li><a href="index.php?action=loginForm">Formulaire de connexion</a></li>
+                    <li><a href="index.php?action=registrationForm">Formulaire d'inscription</a></li>
                     <li><a href="index.php?action=userAccount">Compte utilisateur</a></li>
                     <li><a href="index.php?action=createBook">Ajout d'un livre </a></li>
                     <li><a href="index.php?action=updateBook">Modification d'un livre</a></li>

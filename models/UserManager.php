@@ -19,7 +19,7 @@ class UserManager extends AbstractEntityManager
             'email' => $user->getEmail(),
             'password' => $user->getPassword(),
             'image' => $user->getImage(),
-            'creation_date' => $user->getCreationDate()
+            'creation_date' => $user->getCreationDateString()
         ]);
     }
 
@@ -39,7 +39,7 @@ class UserManager extends AbstractEntityManager
 
     public function getUserById(int $id): ?User
     {
-        $statement = "SELECT * FROM users WHERE Id_users = :id";
+        $statement = "SELECT Id_users AS id, username, email, password, image, creation_date FROM users WHERE Id_users = :id";
 
         $result = $this->database->query($statement,['id' => $id]);
         $user = $result->fetch();
@@ -53,17 +53,27 @@ class UserManager extends AbstractEntityManager
 
     public function getUserByEmail(string $email): ?User
     {
-        $statement = "SELECT * FROM users WHERE email = :email";
+        $statement = "SELECT Id_users AS id, username, email, password, image, creation_date FROM users WHERE email = :email";
 
         $result = $this->database->query($statement,['email' => $email]);
         $user = $result->fetch();
 
         if($user) {
-            return new User($user);
+            return New User($user);
         }
 
         return null;
     }
+
+    public function userExists($username, $email): bool
+    {
+        $statement = "SELECT * FROM users WHERE username = :username OR email = :email";
+
+        $result = $this->database->query($statement, ['username' => $username, 'email' => $email]);
+
+        return $result->rowCount() > 0;
+    }
+
 
     public function deleteUserById(int $id): void
     {

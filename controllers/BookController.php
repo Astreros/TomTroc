@@ -7,8 +7,10 @@ class BookController
      */
     public function addBook(): void
     {
+        Utils::checkIfUserIsConnected();
+
         $view = new View('Ajouter un livre');
-        $view->render('userBook', ['variableTest' => 'Hello World ! Page d\'ajout d\'un livre']);
+        $view->render('userBook');
     }
 
     /**
@@ -16,7 +18,9 @@ class BookController
      */
     public function updateBook(): void
     {
+        Utils::checkIfUserIsConnected();
+
         $view = new View('Modifier un livre');
-        $view->render('userBook', ['variableTest' => 'Hello World ! Page de modification d\'un livre']);
+        $view->render('userBook');
     }
 }
