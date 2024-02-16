@@ -37,11 +37,11 @@ class UserManager extends AbstractEntityManager
         ]);
     }
 
-    public function getUserById(int $id): ?User
+    public function getUserById(int $id): User|null
     {
         $statement = "SELECT Id_users AS id, username, email, password, image, creation_date FROM users WHERE Id_users = :id";
 
-        $result = $this->database->query($statement,['id' => $id]);
+        $result = $this->database->query($statement, ['id' => $id]);
         $user = $result->fetch();
 
         if($user) {
@@ -51,7 +51,7 @@ class UserManager extends AbstractEntityManager
         return null;
     }
 
-    public function getUserByEmail(string $email): ?User
+    public function getUserByEmail(string $email): User|null
     {
         $statement = "SELECT Id_users AS id, username, email, password, image, creation_date FROM users WHERE email = :email";
 

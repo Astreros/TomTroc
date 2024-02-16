@@ -33,14 +33,34 @@ class BookManager extends AbstractEntityManager
         ]);
     }
 
-    public function getBookById(): Book
+    public function getBookById(int $id): Book|null
     {
+        $statement = "SELECT Id_books AS id, title, author, description, image, available FROM books WHERE Id_books = :id";
 
+        $result = $this->database->query($statement, ['id' => $id]);
+        $book = $result->fetch();
+
+        if ($book) {
+            return new Book($book);
+        }
+
+        return null;
     }
 
-    public function getBookByTitle(): Book
+    public function getSearchBookResultByTitle(string $userQuery): array|null
     {
+        $books = [];
+        $userQuery = "%" . $userQuery . "%";
 
+        $statement = "SELECT Id_books AS id, title, author, description, image, available FROM books WHERE title LIKE :query AND  available = TRUE";
+
+        $result = $this->database->query($statement, ['query' => $userQuery]);
+
+        while ($bok = $result->fetch()) {
+            $books[] = new Book($books);
+        }
+
+        return !empty($books) ? $books : null;
     }
 
     public function getAllBooksAvailable(?int $id): array|null
