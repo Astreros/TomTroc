@@ -44,8 +44,8 @@
                     <li><a href="index.php?action=loginForm">Formulaire de connexion</a></li>
                     <li><a href="index.php?action=registrationForm">Formulaire d'inscription</a></li>
                     <li><a href="index.php?action=userAccount">Compte utilisateur</a></li>
-                    <li><a href="index.php?action=createBook">Ajout d'un livre </a></li>
-                    <li><a href="index.php?action=updateBook">Modification d'un livre</a></li>
+                    <li><a href="index.php?action=createBookForm">Ajout d'un livre </a></li>
+                    <li><a href="index.php?action=updateBookForm">Modification d'un livre</a></li>
                     <li><a href="index.php?action=messaging">Messagerie utilisateur</a></li>
                     <li><a href="index.php?action=privacyPolicy">Politiques de confidentialité</a></li>
                     <li><a href="index.php?action=termsOfUse">Mentions légales</a></li>

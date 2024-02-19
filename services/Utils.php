@@ -82,4 +82,17 @@ class Utils
             self::redirect("loginForm");
         }
     }
+
+    public static function uploadImageFile(array $image, string $category, string $path): string|null
+    {
+        $imageFileType = pathinfo($image['name'], PATHINFO_EXTENSION);
+        $imageName = uniqid($category, true) . '.' . $imageFileType;
+        $imagePath = $path . $imageName;
+
+        if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
+            return null;
+        }
+
+        return $imagePath;
+    }
 }

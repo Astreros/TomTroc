@@ -2,7 +2,7 @@
 
 class BookManager extends AbstractEntityManager
 {
-    public function addBook(Book $book, int $id): void
+    public function addBook(Book $book, int $idUser): void
     {
         $statement = "INSERT INTO books (title, author, description, image, available, creation_date, Id_users) VALUES (:title, :author, :description, :image, :available, :creation_date, :Id_users)";
 
@@ -13,8 +13,8 @@ class BookManager extends AbstractEntityManager
             'description' => $book->getDescription(),
             'image' => $book->getImage(),
             'available' => $book->getAvailable(),
-            'creation_date' => $book->getCreationDate(),
-            'Id_users' => $id
+            'creation_date' => $book->getCreationDateString(),
+            'Id_users' => $idUser
         ]);
     }
 

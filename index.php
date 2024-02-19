@@ -68,14 +68,24 @@
                 $userController->showUser();
                 break;
 
-            case 'createBook':
+            case 'createBookForm':
                 $bookController = new BookController();
                 $bookController->addBook();
                 break;
 
-            case 'updateBook':
+            case 'updateBookForm':
                 $bookController = new BookController();
                 $bookController->updateBook();
+                break;
+
+            case 'createBook':
+                $bookController = new BookController();
+                $bookController->createBook();
+                break;
+
+            case 'UpdatingBook':
+                $bookController = new BookController();
+                $bookController->UpdatingBook();
                 break;
 
             case 'messaging':

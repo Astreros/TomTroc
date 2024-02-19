@@ -84,6 +84,7 @@ class UserController
         $password = strip_tags($password);
 
         $errors = [];
+        $validateData = [];
 
         if(!preg_match(USERNAME_REGEX_CHECK, $username)) {
             $errors['username'] = "Format du nom d'utilisateur invalide. 3 à 32 caractères alphanumériques uniquement.";
@@ -105,7 +106,7 @@ class UserController
      */
     public function registrationUser(): void
     {
-        $username = utils::request('username');
+        $username = Utils::request('username');
         $email = Utils::request('email');
         $password = Utils::request('password');
 
