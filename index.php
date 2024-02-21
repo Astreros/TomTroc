@@ -83,9 +83,14 @@
                 $bookController->createBook();
                 break;
 
-            case 'UpdatingBook':
+            case 'updatingBook':
                 $bookController = new BookController();
                 $bookController->UpdatingBook();
+                break;
+
+            case 'userBook':
+                $bookController = new BookController();
+                $bookController->showUserBooks();
                 break;
 
             case 'messaging':

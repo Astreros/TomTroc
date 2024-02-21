@@ -79,12 +79,7 @@ class UserController
 
     public function validateRegistrationData(string $username, string $email, string $password): array
     {
-        $username = strip_tags($username);
-        $email = strip_tags($email);
-        $password = strip_tags($password);
-
         $errors = [];
-        $validateData = [];
 
         if(!preg_match(USERNAME_REGEX_CHECK, $username)) {
             $errors['username'] = "Format du nom d'utilisateur invalide. 3 à 32 caractères alphanumériques uniquement.";
@@ -106,9 +101,9 @@ class UserController
      */
     public function registrationUser(): void
     {
-        $username = Utils::request('username');
-        $email = Utils::request('email');
-        $password = Utils::request('password');
+        $username = strip_tags(Utils::request('username'));
+        $email = strip_tags(Utils::request('email'));
+        $password = strip_tags(Utils::request('password'));
 
         if (empty($email) || empty($password) || empty($username)) {
             $view = new View('Formulaire d\'inscription');
@@ -118,6 +113,10 @@ class UserController
 
         $usernameOrEmailAlreadyExists = $this->usernameOrEmailAlreadyExists($username, $email);
         $errors = $this->validateRegistrationData($username, $email, $password);
+
+        $username = Utils::protectedStringFormat($username);
+        $email = Utils::protectedStringFormat($email);
+        $password = Utils::protectedStringFormat($password);
 
         $view = new View('Formulaire d\'inscription');
 

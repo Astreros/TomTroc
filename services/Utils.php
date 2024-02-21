@@ -95,4 +95,11 @@ class Utils
 
         return $imagePath;
     }
+
+    public static function deleteImageFile($imageName): void
+    {
+        if(file_exists($imageName)) {
+            unlink($imageName);
+        }
+    }
 }
