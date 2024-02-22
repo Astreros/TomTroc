@@ -8,7 +8,7 @@ class PublicPageController
     public function showHome(): void
     {
         $view = new View('Accueil');
-        $view->render('home', ['variableTest' => 'Hello World ! Page d\'Accueil']);
+        $view->render('home');
     }
 
     /**
@@ -17,7 +17,7 @@ class PublicPageController
     public function showLibrary(): void
     {
         $view = new View('Bibliothèque');
-        $view->render('library', ['variableTest' => 'Hello World ! Page de nos livres à l\'échange']);
+        $view->render('library');
     }
 
     /**
@@ -26,7 +26,7 @@ class PublicPageController
     public function showBookDetails(): void
     {
         $view = new View('Détails livre');
-        $view->render('bookDetails', ['variableTest' => 'Hello World ! Page des détails d\'un livre']);
+        $view->render('bookDetails');
     }
 
     /**
@@ -35,7 +35,7 @@ class PublicPageController
     public function showPublicUserAccount(): void
     {
         $view = new View('Compte public utilisateur');
-        $view->render('publicUserAccount', ['variableTest' => 'Hello World ! Page public d\'un utilisateur']);
+        $view->render('publicUserAccount');
     }
 
     /**
@@ -44,7 +44,7 @@ class PublicPageController
     public function showPrivacyPolicy(): void
     {
         $view = new View('Politique de confidentialité');
-        $view->render('privacyPolicy', ['variableTest' => 'Hello World ! Page public de la politique de confidentialité']);
+        $view->render('privacyPolicy');
     }
 
     /**
@@ -53,6 +53,6 @@ class PublicPageController
     public function showTermsOfUse(): void
     {
         $view = new View('Mentions légales');
-        $view->render('termsOfUse', ['variableTest' => 'Hello World ! Page public des mentions légales']);
+        $view->render('termsOfUse');
     }
 }
