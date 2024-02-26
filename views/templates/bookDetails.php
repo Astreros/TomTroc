@@ -33,9 +33,14 @@
             </div>
         </div>
 
-        <div class="book-details-contact">
-            <a href="index.php?action=library" class="green-button">Envoyer un message</a>
-        </div>
+        <?php
+            if (isset($_SESSION['user'])) { ?>
+                <div class="book-details-contact">
+                    <a href="index.php?action=library" class="green-button">Envoyer un message</a>
+                </div>
+                <?php
+            }
+        ?>
     </div>
 
 </section>
