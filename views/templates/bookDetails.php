@@ -33,7 +33,9 @@
             </div>
         </div>
 
-        <a href="index.php?action=library" class="green-button">Envoyer un message</a>
+        <div class="book-details-contact">
+            <a href="index.php?action=library" class="green-button">Envoyer un message</a>
+        </div>
     </div>
 
 </section>
