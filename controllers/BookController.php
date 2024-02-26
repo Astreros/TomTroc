@@ -142,7 +142,7 @@ class BookController
         }
 
         if(!preg_match(BOOK_DESCRIPTION_CHECK, $description)) {
-            $errors['description'] = "Format de la description invalide. 50 à 2000 caractères (UTF-8).";
+            $errors['description'] = "Format de la description invalide. 50 à 500 caractères (UTF-8).";
         }
 
         if(!($available === 'true' || $available === 'false')) {
@@ -175,7 +175,7 @@ class BookController
 
         $title = htmlspecialchars($title, ENT_QUOTES);
         $author = htmlspecialchars($author, ENT_QUOTES);
-        $description = htmlspecialchars($description, ENT_QUOTES);
+        $description = Utils::protectedStringFormat($description);
         $available = htmlspecialchars($available, ENT_QUOTES);
 
         $booleanAvailable = $available === "true";

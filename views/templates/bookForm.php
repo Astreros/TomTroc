@@ -33,7 +33,7 @@
     <input type="text" id="author" name="author" value="<?=  $preFilled ? $author  : '' ?>" minlength="3" maxlength="32" required>
 
     <label for="description">Commentaire </label>
-    <input type="text" id="description" name="description" value="<?=  $preFilled ? $description : '' ?>" minlength="50" maxlength="2000" required>
+    <input type="text" id="description" name="description" value="<?=  $preFilled ? $description : '' ?>" minlength="50" maxlength="500" required>
 
     <label for="available">Disponibilité </label>
     <select name="available" id="available" required>

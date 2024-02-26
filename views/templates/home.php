@@ -16,49 +16,49 @@
     <h2>Les derniers livres ajoutés</h2>
 
     <div class="cards-container">
-        <a>
-            <div class="book-card">
+        <div class="book-card">
+            <a href="#">
                 <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
                 <div class="text-card">
                     <p class="title-book-card">Titre du livre</p>
                     <p class="author-book-card">Nom de l'auteur</p>
                     <p class="seller-book-card">Vendu par : Username</p>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
 
-        <a>
-            <div class="book-card">
+        <div class="book-card">
+            <a href="#">
                 <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
                 <div class="text-card">
                     <p class="title-book-card">Titre du livre</p>
                     <p class="author-book-card">Nom de l'auteur</p>
                     <p class="seller-book-card">Vendu par : Username</p>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
 
-        <a>
-            <div class="book-card">
+        <div class="book-card">
+            <a href="#">
                 <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
                 <div class="text-card">
                     <p class="title-book-card">Titre du livre</p>
                     <p class="author-book-card">Nom de l'auteur</p>
                     <p class="seller-book-card">Vendu par : Username</p>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
 
-        <a>
-            <div class="book-card">
+        <div class="book-card">
+            <a href="#">
                 <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
                 <div class="text-card">
                     <p class="title-book-card">Titre du livre</p>
                     <p class="author-book-card">Nom de l'auteur</p>
                     <p class="seller-book-card">Vendu par : Username</p>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
     </div>
 
     <a href="index.php?action=library" class="green-button">Voir tous les livres</a>
