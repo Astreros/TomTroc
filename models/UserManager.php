@@ -39,7 +39,7 @@ class UserManager extends AbstractEntityManager
 
     public function getUserById(int $id): User|null
     {
-        $statement = "SELECT Id_users AS id, username, email, password, image, creation_date FROM users WHERE Id_users = :id";
+        $statement = "SELECT *, Id_users AS id FROM users WHERE Id_users = :id";
 
         $result = $this->database->query($statement, ['id' => $id]);
         $user = $result->fetch();
@@ -51,9 +51,23 @@ class UserManager extends AbstractEntityManager
         return null;
     }
 
+    public function getUserByBookId(int $idBook): User|null
+    {
+        $statement = "SELECT users.* FROM users INNER JOIN books ON users.Id_users = books.Id_users WHERE books.Id_books = :idBook";
+
+        $result = $this->database->query($statement, ['idBook' => $idBook]);
+        $user = $result->fetch();
+
+        if ($user) {
+            return new User($user);
+        }
+
+        return null;
+    }
+
     public function getUserByEmail(string $email): User|null
     {
-        $statement = "SELECT Id_users AS id, username, email, password, image, creation_date FROM users WHERE email = :email";
+        $statement = "SELECT *, Id_users AS id FROM users WHERE email = :email";
 
         $result = $this->database->query($statement, ['email' => $email]);
         $user = $result->fetch();

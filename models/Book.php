@@ -7,6 +7,7 @@ class Book extends AbstractEntity
     private string $description;
     private ?string $image = null;
     private bool $available;
+    private string $seller;
 
     public function setTitle(string $title): void
     {
@@ -56,5 +57,15 @@ class Book extends AbstractEntity
     public function getAvailable(): bool
     {
         return $this->available;
+    }
+
+    public function setSeller(string $seller): void
+    {
+        $this->seller = $seller;
+    }
+
+    public function getSeller(): string
+    {
+        return $this->seller;
     }
 }

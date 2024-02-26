@@ -35,7 +35,7 @@ class BookManager extends AbstractEntityManager
 
     public function getBookById(int $id): Book|null
     {
-        $statement = "SELECT Id_books AS id, title, author, description, image, available FROM books WHERE Id_books = :id";
+        $statement = "SELECT *, Id_books AS id FROM books WHERE Id_books = :id";
 
         $result = $this->database->query($statement, ['id' => $id]);
         $book = $result->fetch();
@@ -52,7 +52,7 @@ class BookManager extends AbstractEntityManager
         $books = [];
         $userQuery = "%" . $userQuery . "%";
 
-        $statement = "SELECT Id_books AS id, title, author, description, image, available FROM books WHERE title LIKE :query AND  available = TRUE";
+        $statement = "SELECT  *, Id_books AS id FROM books WHERE title LIKE :query AND  available = TRUE";
 
         $result = $this->database->query($statement, ['query' => $userQuery]);
 
@@ -63,12 +63,12 @@ class BookManager extends AbstractEntityManager
         return !empty($books) ? $books : null;
     }
 
-    public function getAllBooksAvailable(?int $id): array|null
+    public function getAllBooksAvailable(?int $id = null): array|null
     {
         $books = [];
 
         if($id) {
-            $statement = "SELECT * FROM books WHERE Id_users = :id AND available = TRUE";
+            $statement = "SELECT books.*, books.Id_books AS id, users.username AS seller FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE books.Id_books = :id AND available = TRUE";
 
             $result = $this->database->query($statement, ['id' => $id]);
 
@@ -79,7 +79,7 @@ class BookManager extends AbstractEntityManager
             return !empty($books) ? $books : null;
         }
 
-        $statement = "SELECT * FROM books WHERE available = TRUE";
+        $statement = "SELECT books.*, books.Id_books AS id, users.username AS seller FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE available = TRUE";
 
         $result = $this->database->query($statement);
 

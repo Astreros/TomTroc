@@ -13,182 +13,21 @@
     </div>
 
     <div class="cards-container-library">
+        <?php
+        foreach ($allBooksAvailable as $book) { ?>
 
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
+            <div class="book-card">
+            <a href="index.php?action=bookDetails&id=<?= $book->getId() ?>">
+                <img src="<?= $book->getImage() ?>" alt="<?= $book->getTitle() ?>">
                 <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
+                    <p class="title-book-card"><?= substr($book->getTitle(), 0, 20) ?><?= strlen($book->getTitle()) > 20 ? '...' : ''?></p>
+                    <p class="author-book-card"><?= $book->getAuthor() ?></p>
+                    <p class="seller-book-card">Vendu par : <?= $book->getSeller() ?></p>
                 </div>
             </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="book-card">
-            <a href="#">
-                <img src="./images/books/922f7d911d69633167d3700d8c0b3049.jpg" alt="titre du livre">
-                <div class="text-card">
-                    <p class="title-book-card">Titre du livre</p>
-                    <p class="author-book-card">Nom de l'auteur</p>
-                    <p class="seller-book-card">Vendu par : Username</p>
-                </div>
-            </a>
-        </div>
+            </div><?php
+        }
+        ?>
     </div>
 </section>
 

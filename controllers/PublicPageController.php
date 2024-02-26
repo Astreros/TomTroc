@@ -7,8 +7,13 @@ class PublicPageController
      */
     public function showHome(): void
     {
+        $bookManager = new BookManager();
+        $books = $bookManager->getAllBooksAvailable();
+
+        $lastBooks = array_slice($books, -4,4) ;
+
         $view = new View('Accueil');
-        $view->render('home');
+        $view->render('home', ['lastBooks' => $lastBooks]);
     }
 
     /**
@@ -16,8 +21,11 @@ class PublicPageController
      */
     public function showLibrary(): void
     {
+        $bookManager = new BookManager();
+        $allBooksAvailable = $bookManager->getAllBooksAvailable();
+
         $view = new View('Bibliothèque');
-        $view->render('library');
+        $view->render('library', ['allBooksAvailable' => $allBooksAvailable]);
     }
 
     /**
@@ -25,8 +33,20 @@ class PublicPageController
      */
     public function showBookDetails(): void
     {
+        $bookId = Utils::request('id');
+
+        if (!$bookId) {
+            Utils::redirect('library');
+        }
+
+        $bookManger = new BookManager();
+        $book = $bookManger->getBookById($bookId);
+
+        $userManager = new UserManager();
+        $user = $userManager->getUserByBookId($bookId);
+
         $view = new View('Détails livre');
-        $view->render('bookDetails');
+        $view->render('bookDetails', ['book' => $book, 'bookUser' => $user]);
     }
 
     /**
