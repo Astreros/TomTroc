@@ -660,3 +660,15 @@ input[type="submit"] {
     }
 }
 
+
+/* Section "privacy-policy" et "terms-of-use" */
+
+
+.privacy-policy, .terms-of-use {
+    background-color: var(--backgroundColor);
+    padding: 5% 10%;
+}
+
+.privacy-policy h2, .terms-of-use h2 {
+    margin: 0;
+}

@@ -22,7 +22,7 @@
         <div class="book-details-owner">
             <p class="book-details-subtitle">PROPRIÉTAIRE</p>
             <div class="book-details-owner-photo">
-                <img src="./images/users/881fce26b8c1ef13143f6640479db593.jpg" alt="<?= $bookUser->getUsername() ?>">
+                <img src="<?= $bookUser->getImage() ?>" alt="<?= $bookUser->getUsername() ?>">
                 <p><?= $bookUser->getUsername() ?></p>
             </div>
         </div>
