@@ -672,3 +672,59 @@ input[type="submit"] {
 .privacy-policy h2, .terms-of-use h2 {
     margin: 0;
 }
+
+/* Section "user-account" */
+
+.user-account {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--backgroundColor);
+}
+
+.user-account h2 {
+    margin: 0;
+    padding: 5% 10%;
+}
+
+.user-account-informations {
+    display: flex;
+}
+
+.user-informations {
+    background-color: #FFFFFF;
+}
+
+.user-update-form {
+    background-color: #FFFFFF;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

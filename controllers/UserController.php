@@ -12,9 +12,13 @@ class UserController
         Utils::checkIfUserIsConnected();
 
         $user = $_SESSION['user'];
+        $userId = $user->getId();
+
+        $bookManger = new BookManager();
+        $userBooks = $bookManger->getAllBooksByUserId($userId);
 
         $view = new View('Profil utilisateur');
-        $view->render('userAccount', ['user' => $user]);
+        $view->render('userAccount', ['user' => $user, 'userBooks' => $userBooks]);
     }
 
     /**

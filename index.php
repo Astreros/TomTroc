@@ -52,6 +52,11 @@
                 $userController->registrationUser();
                 break;
 
+            case 'search':
+                $publicPageController = new PublicPageController();
+                $publicPageController->showLibrarySearch();
+                break;
+
             case 'privacyPolicy':
                 $publicPageController = new PublicPageController();
                 $publicPageController->showPrivacyPolicy();

@@ -1,4 +1,6 @@
 <?php
+    $books = $searchResults ?? $allBooksAvailable ?? [];
+
 ?>
 
 <section class="library">
@@ -6,7 +8,7 @@
     <div class="library-header">
         <h2>Nos livres à l'échange</h2>
 
-        <form method="GET" action="">
+        <form method="POST" action="index.php?action=search">
             <label for="search"></label>
             <span><i class="fas fa-search"></i><input type="search" id="search" name="search" minlength="3" maxlength="144" placeholder="Rechercher un livre"></span>
         </form>
@@ -14,7 +16,14 @@
 
     <div class="cards-container-library">
         <?php
-        foreach ($allBooksAvailable as $book) { ?>
+
+        if ($books === []) { ?>
+                <p>Aucun livre trouvé</p>
+            <?php
+        } ?>
+
+        <?php
+        foreach ($books as $book) { ?>
 
             <div class="book-card">
             <a href="index.php?action=bookDetails&id=<?= $book->getId() ?>">
@@ -26,8 +35,7 @@
                 </div>
             </a>
             </div><?php
-        }
-        ?>
+        } ?>
     </div>
 </section>
 

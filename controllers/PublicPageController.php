@@ -31,6 +31,26 @@ class PublicPageController
     /**
      * @throws Exception
      */
+    public function showLibrarySearch(): void
+    {
+        $userRequest = strip_tags(Utils::request('search'));
+
+        if (empty($userRequest)) {
+            Utils::redirect('library');
+        }
+
+        $userRequest = htmlspecialchars($userRequest, ENT_QUOTES);
+
+        $bookManager = new BookManager();
+        $searchResults = $bookManager->getSearchBookResultByTitle($userRequest);
+
+        $view = new View('Bibliothèque');
+        $view->render('library', ['searchResults' => $searchResults]);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function showBookDetails(): void
     {
         $bookId = Utils::request('id');

@@ -52,12 +52,12 @@ class BookManager extends AbstractEntityManager
         $books = [];
         $userQuery = "%" . $userQuery . "%";
 
-        $statement = "SELECT  *, Id_books AS id FROM books WHERE title LIKE :query AND  available = TRUE";
+        $statement = "SELECT books.*, books.Id_books AS id, users.username AS seller FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE title LIKE :query AND  available = TRUE";
 
         $result = $this->database->query($statement, ['query' => $userQuery]);
 
-        while ($bok = $result->fetch()) {
-            $books[] = new Book($books);
+        while ($book = $result->fetch()) {
+            $books[] = new Book($book);
         }
 
         return !empty($books) ? $books : null;
@@ -82,6 +82,19 @@ class BookManager extends AbstractEntityManager
         $statement = "SELECT books.*, books.Id_books AS id, users.username AS seller FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE available = TRUE";
 
         $result = $this->database->query($statement);
+
+        while ($book = $result->fetch()) {
+            $books[] = new Book($book);
+        }
+
+        return !empty($books) ? $books : null;
+    }
+
+    public function getAllBooksByUserId(int $id = null): array|null
+    {
+        $statement = "SELECT books.*, books.Id_books AS id FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE books.Id_users = :id";
+
+        $result = $this->database->query($statement, ['id' => $id]);
 
         while ($book = $result->fetch()) {
             $books[] = new Book($book);
