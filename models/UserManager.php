@@ -37,6 +37,13 @@ class UserManager extends AbstractEntityManager
         ]);
     }
 
+    public function updateImageUserOnly(string $image, int $id): void
+    {
+        $statement = "UPDATE users SET image = :image WHERE Id_users = :id";
+
+        $this->database->query($statement, ['id' => $id, 'image' => $image]);
+    }
+
     public function getUserById(int $id): User|null
     {
         $statement = "SELECT *, Id_users AS id FROM users WHERE Id_users = :id";
@@ -53,7 +60,7 @@ class UserManager extends AbstractEntityManager
 
     public function getUserByBookId(int $idBook): User|null
     {
-        $statement = "SELECT users.* FROM users INNER JOIN books ON users.Id_users = books.Id_users WHERE books.Id_books = :idBook";
+        $statement = "SELECT users.*, users.Id_users AS id FROM users INNER JOIN books ON users.Id_users = books.Id_users WHERE books.Id_books = :idBook";
 
         $result = $this->database->query($statement, ['idBook' => $idBook]);
         $user = $result->fetch();
@@ -84,6 +91,15 @@ class UserManager extends AbstractEntityManager
         $statement = "SELECT * FROM users WHERE username = :username OR email = :email";
 
         $result = $this->database->query($statement, ['username' => $username, 'email' => $email]);
+
+        return $result->rowCount() > 0;
+    }
+
+    public function exceptCurrentUserExists($username, $email, $id): bool
+    {
+        $statement = "SELECT * FROM users WHERE (username = :username OR email = :email) AND Id_users != :id";
+
+        $result = $this->database->query($statement, ['username' => $username, 'email' => $email, 'id' => $id]);
 
         return $result->rowCount() > 0;
     }

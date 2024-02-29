@@ -74,8 +74,31 @@ class PublicPageController
      */
     public function showPublicUserAccount(): void
     {
+        $idAccountRequest = (int)Utils::request('id');
+
+        if (!$idAccountRequest) {
+            Utils::redirect('home');
+        }
+
+        $userManager = new UserManager();
+        $user = $userManager->getUserById($idAccountRequest);
+
+        if (!$user) {
+            Utils::redirect('home');
+        }
+
+        if(isset($_SESSION['user'])) {
+            $idCurrentUser = $_SESSION['user']->getId();
+            if ($idCurrentUser === $idAccountRequest) {
+                Utils::redirect('userAccount');
+            }
+        }
+
+        $bookManager = new BookManager();
+        $books = $bookManager->getAllBooksByUserId($idAccountRequest);
+
         $view = new View('Compte public utilisateur');
-        $view->render('publicUserAccount');
+        $view->render('publicUserAccount', ['publicUserAccount' => $user, 'publicUserBooks' => $books]);
     }
 
     /**

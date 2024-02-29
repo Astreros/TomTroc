@@ -36,7 +36,7 @@
                         <li class="ignore"><a href="index.php?action=library">Nos livres à l'échange</a></li>
                     </ul>
                 </nav>
-                <div class="spacer"></div>
+                <div class="spacer center"></div>
                 <nav class="nav-user">
                     <ul class="nav-user-list">
                         <?php

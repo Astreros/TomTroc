@@ -1,4 +1,9 @@
 <?php
+    $idCurrentUser = 0;
+
+    if (isset($_SESSION['user'])) {
+        $idCurrentUser = $_SESSION['user']->getId();
+    }
 ?>
 
 <section class="book-details">
@@ -21,14 +26,14 @@
 
         <div class="book-details-owner">
             <p class="book-details-subtitle">PROPRIÉTAIRE</p>
-            <div class="book-details-owner-photo">
+            <a class="book-details-owner-photo" href="index.php?action=publicUserAccount&id=<?= $bookUser->getId() ?>">
                 <img src="<?= $bookUser->getImage() ?>" alt="<?= $bookUser->getUsername() ?>">
                 <p><?= $bookUser->getUsername() ?></p>
-            </div>
+            </a>
         </div>
 
         <?php
-            if (isset($_SESSION['user'])) { ?>
+            if ($bookUser->getId() !== $idCurrentUser) { ?>
                 <div class="book-details-contact">
                     <a href="index.php?action=library" class="green-button">Envoyer un message</a>
                 </div>

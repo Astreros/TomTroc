@@ -12,7 +12,7 @@ class BookController
         Utils::checkIfUserIsConnected();
 
         $view = new View('Ajouter un livre');
-        $view->render('bookForm');
+        $view->render('bookFormCreate');
     }
 
     /**
@@ -22,37 +22,23 @@ class BookController
     {
         Utils::checkIfUserIsConnected();
 
-        $IdBookToBeUpdated = Utils::request('id', -1);
+        $IdBookToBeUpdated = Utils::request('id');
 
-        if ($IdBookToBeUpdated === -1) {
-            Utils::redirect('userBook', ['errorNoBookToUpdate' => 'Aucun livre à mettre a jour.']);
+        if (!$IdBookToBeUpdated) {
+            Utils::redirect('userAccount', ['errorNoBookToUpdate' => 'Aucun livre à mettre a jour.']);
         }
 
         $bookManager = new BookManager();
         $bookToBeUpdated = $bookManager->getBookById($IdBookToBeUpdated);
 
         if ($bookToBeUpdated === null) {
-            Utils::redirect('userBook', ['errorBookHasNotBeenFound' => 'Le livre à mettre à jour n\'a pas été trouvé. ']);
+            Utils::redirect('userAccount', ['errorBookHasNotBeenFound' => 'Le livre à mettre à jour n\'a pas été trouvé. ']);
         }
 
+        $_SESSION['bookToBeUpdated'] = $bookToBeUpdated;
+
         $view = new View('Modifier un livre');
-        $view->render('bookForm', ['bookToBeUpdated' => $bookToBeUpdated]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function showUserBooks(): void
-    {
-        Utils::checkIfUserIsConnected();
-
-        $view = new View('Livres de l\'utilisateur');
-        $view->render('userbook');
-    }
-
-    public function getAllAvailableBooks(): array
-    {
-        return [];
+        $view->render('bookFormUpdate');
     }
 
     /**
@@ -67,9 +53,9 @@ class BookController
         $available = strip_tags(Utils::request('available'));
         $oldImage = Utils::request('oldImage');
 
-        if (empty($title) || empty($author) || empty($description) || empty($available)) {
+        if (empty($title) || empty($author) || empty($description) || is_null($available)) {
             $view = new View('Ajouter un livre');
-            $view->render('BookForm', ['emptyError' => 'Tous les champs sont obligatoires']);
+            $view->render('bookFormUpdate', ['emptyError' => 'Tous les champs sont obligatoires']);
             exit();
         }
 
@@ -78,9 +64,7 @@ class BookController
         $title = htmlspecialchars($title, ENT_QUOTES);
         $author = htmlspecialchars($author, ENT_QUOTES);
         $description = htmlspecialchars($description, ENT_QUOTES);
-        $available = htmlspecialchars($available, ENT_QUOTES);
-
-        $booleanAvailable = $available === "true";
+//        $booleanAvailable = htmlspecialchars($available, ENT_QUOTES);
 
         $allowedMineType = ['image/jpeg', 'image/png'];
 
@@ -101,7 +85,7 @@ class BookController
 
                 } else {
                     $view = new View('Ajouter un livre');
-                    $view->render('BookForm', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
+                    $view->render('bookFormUpdate', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
                     exit();
                 }
             } else {
@@ -114,18 +98,17 @@ class BookController
                 'author' => $author,
                 'description' => $description,
                 'image' => $image,
-                'available' => $booleanAvailable,
+                'available' => $available,
             ];
 
             $bookManager = new BookManager();
             $bookManager->updateBook($book);
 
-            Utils::redirect('bookDetails');
+            Utils::redirect('userAccount');
 
         } else {
-            $view = new View('Ajouter un livre');
-            $view->render('BookForm', ['errors' => $errors]);
-            exit();
+
+            Utils::redirect('bookFormUpdate', ['errors' => $errors]);
         }
     }
 
@@ -145,7 +128,7 @@ class BookController
             $errors['description'] = "Format de la description invalide. 50 à 500 caractères (UTF-8).";
         }
 
-        if(!($available === 'true' || $available === 'false')) {
+        if(!($available === '1' || $available === '0')) {
             $errors['available'] = "Champs de disponibilité invalide.";
         }
 
@@ -167,7 +150,7 @@ class BookController
 
         if (empty($title) || empty($author) || empty($description) || empty($available)) {
             $view = new View('Ajouter un livre');
-            $view->render('BookForm', ['emptyError' => 'Tous les champs sont obligatoires.']);
+            $view->render('bookFormCreate', ['emptyError' => 'Tous les champs sont obligatoires.']);
             exit();
         }
 
@@ -198,7 +181,7 @@ class BookController
 
                 } else {
                     $view = new View('Ajouter un livre');
-                    $view->render('BookForm', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
+                    $view->render('bookFormCreate', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
                     exit();
                 }
             }
@@ -220,7 +203,7 @@ class BookController
 
         } else {
             $view = new View('Ajouter un livre');
-            $view->render('BookForm', ['errors' => $errors]);
+            $view->render('bookFormCreate', ['errors' => $errors]);
             exit();
         }
     }

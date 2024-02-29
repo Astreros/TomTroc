@@ -69,6 +69,28 @@ abstract class AbstractEntity
         return $this->creationDate->format('Y-m-d H:i:s');
     }
 
+    public function getTimeSinceRegistration(): string
+    {
+        $now = new DateTime();
+        $registrationDate = $this->getCreationDate();
+
+        if ($registrationDate instanceof DateTime) {
+
+            $interval = $registrationDate->diff($now);
+
+            if ($interval->y > 0) {
+                $timeSinceRegistration = $interval->format('%y année(s)');
+            } elseif ($interval->m > 0) {
+                $timeSinceRegistration = $interval->format('%m mois');
+            } else {
+                $timeSinceRegistration = $interval->format('%d jours');
+            }
+            return $timeSinceRegistration;
+        }
+
+        return "Date d'inscription non disponible";
+    }
+
     public function getCreationDate(): ?DateTime
     {
         return $this->creationDate;

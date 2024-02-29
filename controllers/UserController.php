@@ -52,6 +52,11 @@ class UserController
         return (new UserManager())->userExists($username, $email);
     }
 
+    public function usernameOrEmailAlreadyExistsExceptCurrentUser($username, $email, $id) :bool
+    {
+        return (new UserManager())->exceptCurrentUserExists($username, $email, $id);
+    }
+
 
     /**
      * @throws Exception
@@ -118,9 +123,9 @@ class UserController
         $usernameOrEmailAlreadyExists = $this->usernameOrEmailAlreadyExists($username, $email);
         $errors = $this->validateRegistrationData($username, $email, $password);
 
-        $username = Utils::protectedStringFormat($username);
-        $email = Utils::protectedStringFormat($email);
-        $password = Utils::protectedStringFormat($password);
+        $username = htmlspecialchars($username, ENT_QUOTES);
+        $email = htmlspecialchars($email, ENT_QUOTES);
+        $password = htmlspecialchars($password, ENT_QUOTES);
 
         $view = new View('Formulaire d\'inscription');
 
@@ -149,10 +154,97 @@ class UserController
         }
     }
 
-    #[NoReturn] public function disconnectUser(): void
+    #[NoReturn] public function updateUserImage(): void
+    {
+        $id = $_SESSION['user']->getId();
+        $oldImage = $_SESSION['user']->getImage();
+
+        $allowedMineType = ['image/jpeg', 'image/png'];
+
+        if ($_FILES['imageToUpload']['error'] !== UPLOAD_ERR_NO_FILE) {
+
+            $image = $_FILES['imageToUpload'];
+
+            $fileMimeType = finfo_open(FILEINFO_MIME_TYPE);
+            $typeMine = finfo_file($fileMimeType, $image['tmp_name']);
+            finfo_close($fileMimeType);
+
+            if (in_array($typeMine, $allowedMineType, true)) {
+
+                Utils::deleteImageFile($oldImage);
+                $image = Utils::uploadImageFile($image, 'users', USERS_IMAGE_PATH);
+
+            } else {
+                Utils::redirect('userAccount', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
+            }
+        } else {
+            $image = $oldImage;
+        }
+
+        $userManager = new UserManager();
+        $userManager->updateImageUserOnly($image, $id);
+
+        $_SESSION['user']->setImage($image);
+
+        Utils::redirect('userAccount');
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[NoReturn] public function updateUser(): void
+    {
+        Utils::checkIfUserIsConnected();
+
+        $id = $_SESSION['user']->getId();
+
+        $username = strip_tags(Utils::request('username'));
+        $email = strip_tags(Utils::request('email'));
+        $password = strip_tags(Utils::request('password'));
+        $image = $_SESSION['user']->getImage();
+
+        if (empty($email) || empty($password) || empty($username)) {
+
+            Utils::redirect('loginForm', ['emptyError' => 'Tous les champs sont obligatoires.']);
+        }
+
+        $usernameOrEmailAlreadyExists = $this->usernameOrEmailAlreadyExistsExceptCurrentUser($username, $email, $id);
+        $errors = $this->validateRegistrationData($username, $email, $password);
+
+        $username = htmlspecialchars($username, ENT_QUOTES);
+        $email = htmlspecialchars($email, ENT_QUOTES);
+        $password = htmlspecialchars($password, ENT_QUOTES);
+
+        if ($usernameOrEmailAlreadyExists) {
+
+            Utils::redirect('userAccount', ['alreadyExistsError' => "Nom d'utilisateur ou l'adresse mail est déjà utilisés."]);
+
+        } elseif (count($errors) === 0) {
+
+            $password = password_hash($password, PASSWORD_DEFAULT);
+
+            $user = new User([
+                'id' => $id,
+                'username' => $username,
+                'email' => $email,
+                'password' => $password,
+                'image'=> $image
+            ]);
+
+            $userManager = new UserManager();
+            $userManager->updateUser($user);
+
+            $this->disconnectUser('loginForm', ['success' => 'Vos informations ont bien été mise à jours.']);
+
+        } else {
+            Utils::redirect('userAccount', ['errors' => $errors]);
+        }
+    }
+
+    #[NoReturn] public function disconnectUser($route, array $params = []): void
     {
         unset($_SESSION['user']);
 
-        Utils::redirect("home");
+        Utils::redirect($route, $params);
     }
 }

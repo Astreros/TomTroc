@@ -73,12 +73,12 @@
                 $userController->showUser();
                 break;
 
-            case 'createBookForm':
+            case 'bookFormCreate':
                 $bookController = new BookController();
                 $bookController->addBook();
                 break;
 
-            case 'updateBookForm':
+            case 'bookFormUpdate':
                 $bookController = new BookController();
                 $bookController->updateBook();
                 break;
@@ -93,9 +93,14 @@
                 $bookController->UpdatingBook();
                 break;
 
-            case 'userBook':
-                $bookController = new BookController();
-                $bookController->showUserBooks();
+            case 'updateUser':
+                $userController = new UserController();
+                $userController->updateUser();
+                break;
+
+            case 'updateUserImage':
+                $userController = new UserController();
+                $userController->updateUserImage();
                 break;
 
             case 'messaging':
@@ -105,7 +110,7 @@
 
             case 'disconnect':
                 $userController = new UserController();
-                $userController->disconnectUser();
+                $userController->disconnectUser('home');
                 break;
 
             default:
