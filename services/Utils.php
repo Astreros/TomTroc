@@ -43,6 +43,17 @@ class Utils
     }
 
     /**
+     * @throws Exception
+     */
+    #[NoReturn] public static function redirectWithoutParamsInUrl(string $action, array $params = []): void
+    {
+        $view = new View($action);
+
+        $view->render($action, $params);
+        exit();
+    }
+
+    /**
      * Cette méthode permet de formater une chaîne de caractères en la protégeant contre les attaques XSS.
      *
      * La chaîne de caractères est protégée en utilisant la fonction htmlspecialchars().

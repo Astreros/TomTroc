@@ -18,20 +18,15 @@
 
         <div class="error-box">
             <?php
-            if (isset($loginError)) {
-
-                echo $loginError;
-
-            } elseif (isset($emptyError)) {
-
-                echo $emptyError;
-
-            } elseif (isset($errors)) {
-
-                foreach ($errors as $error => $value) {
-                    echo $value.'<br/>';
+                if (isset($emptyError)) {
+                    echo $emptyError;
+                } elseif (isset($loginError)) {
+                    echo $loginError;
+                } elseif (isset($errors)) {
+                    foreach ($errors as $error => $value) {
+                        echo $value.'<br/>';
+                    }
                 }
-            }
             ?>
         </div>
 

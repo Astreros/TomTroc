@@ -1,37 +1,37 @@
 <?php
 
+use JetBrains\PhpStorm\NoReturn;
+
 class PublicPageController
 {
     /**
      * @throws Exception
      */
-    public function showHome(): void
+    #[NoReturn] public function showHome(): void
     {
         $bookManager = new BookManager();
         $books = $bookManager->getAllBooksAvailable();
 
         $lastBooks = array_slice($books, -4,4) ;
 
-        $view = new View('Accueil');
-        $view->render('home', ['lastBooks' => $lastBooks]);
+        Utils::redirectWithoutParamsInUrl('home', ['lastBooks' => $lastBooks]);
     }
 
     /**
      * @throws Exception
      */
-    public function showLibrary(): void
+    #[NoReturn] public function showLibrary(): void
     {
         $bookManager = new BookManager();
         $allBooksAvailable = $bookManager->getAllBooksAvailable();
 
-        $view = new View('Bibliothèque');
-        $view->render('library', ['allBooksAvailable' => $allBooksAvailable]);
+        Utils::redirectWithoutParamsInUrl('library', ['allBooksAvailable' => $allBooksAvailable]);
     }
 
     /**
      * @throws Exception
      */
-    public function showLibrarySearch(): void
+    #[NoReturn] public function showLibrarySearch(): void
     {
         $userRequest = strip_tags(Utils::request('search'));
 
@@ -44,14 +44,13 @@ class PublicPageController
         $bookManager = new BookManager();
         $searchResults = $bookManager->getSearchBookResultByTitle($userRequest);
 
-        $view = new View('Bibliothèque');
-        $view->render('library', ['searchResults' => $searchResults]);
+        Utils::redirectWithoutParamsInUrl('library', ['searchResults' => $searchResults]);
     }
 
     /**
      * @throws Exception
      */
-    public function showBookDetails(): void
+    #[NoReturn] public function showBookDetails(): void
     {
         $bookId = Utils::request('id');
 
@@ -65,14 +64,13 @@ class PublicPageController
         $userManager = new UserManager();
         $user = $userManager->getUserByBookId($bookId);
 
-        $view = new View('Détails livre');
-        $view->render('bookDetails', ['book' => $book, 'bookUser' => $user]);
+        Utils::redirectWithoutParamsInUrl('bookDetails', ['book' => $book, 'bookUser' => $user]);
     }
 
     /**
      * @throws Exception
      */
-    public function showPublicUserAccount(): void
+    #[NoReturn] public function showPublicUserAccount(): void
     {
         $idAccountRequest = (int)Utils::request('id');
 
@@ -97,8 +95,7 @@ class PublicPageController
         $bookManager = new BookManager();
         $books = $bookManager->getAllBooksByUserId($idAccountRequest);
 
-        $view = new View('Compte public utilisateur');
-        $view->render('publicUserAccount', ['publicUserAccount' => $user, 'publicUserBooks' => $books]);
+        Utils::redirectWithoutParamsInUrl('publicUserAccount', ['publicUserAccount' => $user, 'publicUserBooks' => $books]);
     }
 
     /**

@@ -1,14 +1,17 @@
 <?php
-    $actionForm = Utils::request('action', 'createBookForm');
-
     if (isset( $_SESSION['bookToBeUpdated'])) {
         $bookToBeUpdated = $_SESSION['bookToBeUpdated'];
-
         $preFilled = true;
     }
 ?>
 
-<h2>Modifier les informations</h2>
+    <a href="index.php?action=userAccount"><- retour</a>
+
+<section>
+    <h2>Modifier les informations</h2>
+</section>
+
+
 
 <form method="POST" action="index.php?action=updatingBook" enctype="multipart/form-data">
     <label for="title">Titre </label>
@@ -34,14 +37,16 @@
     <input type="submit" value="Valider">
 </form>
 
-<?php
-    if (isset($emptyError)) {
-        echo $emptyError;
-    } elseif (isset($formatError)) {
-        echo $formatError;
-    } elseif (isset($errors)) {
-        foreach ($errors as $error => $value) {
-            echo $value.'<br/>';
+<div class="error-box">
+    <?php
+        if (isset($emptyError)) {
+            echo $emptyError;
+        } elseif (isset($formatError)) {
+            echo $formatError;
+        } elseif (isset($errors)) {
+            foreach ($errors as $error => $value) {
+                echo $value.'<br/>';
+            }
         }
-    }
-?>
+    ?>
+</div>

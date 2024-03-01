@@ -7,44 +7,42 @@ class UserController
     /**
      * @throws Exception
      */
-    public function showUser(): void
+    #[NoReturn] public function showUser(): void
     {
         Utils::checkIfUserIsConnected();
 
-        $user = $_SESSION['user'];
-        $userId = $user->getId();
+        $userId = $_SESSION['user']->getId();
 
         $bookManger = new BookManager();
         $userBooks = $bookManger->getAllBooksByUserId($userId);
 
-        $view = new View('Profil utilisateur');
-        $view->render('userAccount', ['user' => $user, 'userBooks' => $userBooks]);
+        $_SESSION['userBooks'] = $userBooks;
+
+        Utils::redirectWithoutParamsInUrl('userAccount');
     }
 
     /**
      * @throws Exception
      */
-    public function showLoginForm(): void
+    #[NoReturn] public function showLoginForm(): void
     {
         if (isset($_SESSION['user'])) {
             Utils::redirect('userAccount');
         }
 
-        $view = new View('Formulaire de connexion');
-        $view->render('loginForm');
+        Utils::redirectWithoutParamsInUrl('loginForm');
     }
 
     /**
      * @throws Exception
      */
-    public function showRegistrationForm(): void
+    #[NoReturn] public function showRegistrationForm(): void
     {
         if (isset($_SESSION['user'])) {
             Utils::redirect('userAccount');
         }
 
-        $view = new View('Formulaire d\'inscription');
-        $view->render('registrationForm');
+        Utils::redirectWithoutParamsInUrl('registrationForm');
     }
 
     public function usernameOrEmailAlreadyExists($username, $email) :bool
@@ -67,18 +65,14 @@ class UserController
         $password = Utils::request('password');
 
         if (empty($email) || empty($password)) {
-            $view = new View('Formulaire de connexion');
-            $view->render('loginForm', ['emptyError' => 'Tous les champs sont obligatoires.']);
-            exit();
+            Utils::redirectWithoutParamsInUrl('loginForm', ['emptyError' => "Tous les champs sont obligatoires."]);
         }
 
         $userManager = New UserManager();
         $user = $userManager->getUserByEmail($email);
 
         if ($user === null || !password_verify($password, $user->getPassword())) {
-            $view = new View('Formulaire de connexion');
-            $view->render('loginForm', ['loginError' => 'Identifiants incorrects.']);
-            exit();
+            Utils::redirectWithoutParamsInUrl('loginForm', ['loginError' => "Identifiants incorrects."]);
         }
 
         $_SESSION['user'] = $user;
@@ -108,16 +102,15 @@ class UserController
     /**
      * @throws Exception
      */
-    public function registrationUser(): void
+    #[NoReturn] public function registrationUser(): void
     {
         $username = strip_tags(Utils::request('username'));
         $email = strip_tags(Utils::request('email'));
         $password = strip_tags(Utils::request('password'));
 
         if (empty($email) || empty($password) || empty($username)) {
-            $view = new View('Formulaire d\'inscription');
-            $view->render('registrationForm', ['emptyError' => 'Tous les champs sont obligatoires.']);
-            exit();
+
+            Utils::redirectWithoutParamsInUrl('registrationForm', ['emptyError' => "Tous les champs sont obligatoires."]);
         }
 
         $usernameOrEmailAlreadyExists = $this->usernameOrEmailAlreadyExists($username, $email);
@@ -127,11 +120,9 @@ class UserController
         $email = htmlspecialchars($email, ENT_QUOTES);
         $password = htmlspecialchars($password, ENT_QUOTES);
 
-        $view = new View('Formulaire d\'inscription');
-
         if ($usernameOrEmailAlreadyExists) {
 
-            $view->render('registrationForm', ['alreadyExistsError' => "Nom d'utilisateur ou l'adresse mail est déjà utilisés."]);
+            Utils::redirectWithoutParamsInUrl('registrationForm', ['alreadyExistsError' => "Nom d'utilisateur ou l'adresse mail est déjà utilisés."]);
 
         } elseif (count($errors) === 0) {
 
@@ -150,10 +141,13 @@ class UserController
             Utils::redirect('loginForm');
 
         } else {
-            $view->render('registrationForm', ['errors' => $errors]);
+            Utils::redirectWithoutParamsInUrl('registrationForm', ['errors' => $errors]);
         }
     }
 
+    /**
+     * @throws Exception
+     */
     #[NoReturn] public function updateUserImage(): void
     {
         $id = $_SESSION['user']->getId();
@@ -175,7 +169,7 @@ class UserController
                 $image = Utils::uploadImageFile($image, 'users', USERS_IMAGE_PATH);
 
             } else {
-                Utils::redirect('userAccount', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
+                Utils::redirectWithoutParamsInUrl('userAccount', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
             }
         } else {
             $image = $oldImage;
@@ -186,7 +180,7 @@ class UserController
 
         $_SESSION['user']->setImage($image);
 
-        Utils::redirect('userAccount');
+        Utils::redirectWithoutParamsInUrl('userAccount');
     }
 
     /**
@@ -204,8 +198,7 @@ class UserController
         $image = $_SESSION['user']->getImage();
 
         if (empty($email) || empty($password) || empty($username)) {
-
-            Utils::redirect('loginForm', ['emptyError' => 'Tous les champs sont obligatoires.']);
+            Utils::redirectWithoutParamsInUrl('userAccount', ['emptyError' => 'Tous les champs sont obligatoires.']);
         }
 
         $usernameOrEmailAlreadyExists = $this->usernameOrEmailAlreadyExistsExceptCurrentUser($username, $email, $id);
@@ -216,10 +209,10 @@ class UserController
         $password = htmlspecialchars($password, ENT_QUOTES);
 
         if ($usernameOrEmailAlreadyExists) {
+            Utils::redirectWithoutParamsInUrl('loginForm', ['alreadyExistsError' => 'Nom d\'utilisateur ou l\'adresse mail est déjà utilisés.']);
+        }
 
-            Utils::redirect('userAccount', ['alreadyExistsError' => "Nom d'utilisateur ou l'adresse mail est déjà utilisés."]);
-
-        } elseif (count($errors) === 0) {
+        if (count($errors) === 0) {
 
             $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -234,17 +227,17 @@ class UserController
             $userManager = new UserManager();
             $userManager->updateUser($user);
 
-            $this->disconnectUser('loginForm', ['success' => 'Vos informations ont bien été mise à jours.']);
+            Utils::redirectWithoutParamsInUrl('loginForm', ['success' => 'Vos informations ont bien été mise à jours.']);
 
         } else {
-            Utils::redirect('userAccount', ['errors' => $errors]);
+
+            Utils::redirectWithoutParamsInUrl('userAccount', ['errors' => $errors]);
         }
     }
 
-    #[NoReturn] public function disconnectUser($route, array $params = []): void
+    #[NoReturn] public function disconnectUser($route): void
     {
         unset($_SESSION['user']);
-
-        Utils::redirect($route, $params);
+        Utils::redirect($route);
     }
 }

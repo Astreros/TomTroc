@@ -21,20 +21,15 @@
 
         <div class="error-box">
             <?php
-            if (isset($alreadyExistsError)) {
-
-                echo $alreadyExistsError;
-
-            } elseif (isset($emptyError)) {
-
-                echo $emptyError;
-
-            } elseif (isset($errors)) {
-
-                foreach ($errors as $error => $value) {
-                    echo $value.'<br/>';
+                if (isset($emptyError)) {
+                    echo $emptyError;
+                } elseif (isset($alreadyExistsError)) {
+                    echo $alreadyExistsError;
+                } elseif (isset($errors)) {
+                    foreach ($errors as $error => $value) {
+                        echo $value.'<br/>';
+                    }
                 }
-            }
             ?>
         </div>
 

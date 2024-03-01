@@ -7,38 +7,36 @@ class BookController
     /**
      * @throws Exception
      */
-    public function addBook(): void
+    #[NoReturn] public function addBook(): void
     {
         Utils::checkIfUserIsConnected();
 
-        $view = new View('Ajouter un livre');
-        $view->render('bookFormCreate');
+        Utils::redirect('bookFormCreate');
     }
 
     /**
      * @throws Exception
      */
-    public function updateBook(): void
+    #[NoReturn] public function updateBook(): void
     {
         Utils::checkIfUserIsConnected();
 
         $IdBookToBeUpdated = Utils::request('id');
 
         if (!$IdBookToBeUpdated) {
-            Utils::redirect('userAccount', ['errorNoBookToUpdate' => 'Aucun livre à mettre a jour.']);
+            Utils::redirectWithoutParamsInUrl('userAccount', ['errorNoBookToUpdate' => 'Aucun livre à mettre a jour.']);
         }
 
         $bookManager = new BookManager();
         $bookToBeUpdated = $bookManager->getBookById($IdBookToBeUpdated);
 
         if ($bookToBeUpdated === null) {
-            Utils::redirect('userAccount', ['errorBookHasNotBeenFound' => 'Le livre à mettre à jour n\'a pas été trouvé. ']);
+            Utils::redirectWithoutParamsInUrl('userAccount', ['errorBookHasNotBeenFound' => 'Le livre à mettre à jour n\'a pas été trouvé. ']);
         }
 
         $_SESSION['bookToBeUpdated'] = $bookToBeUpdated;
 
-        $view = new View('Modifier un livre');
-        $view->render('bookFormUpdate');
+        Utils::redirectWithoutParamsInUrl('bookFormUpdate');
     }
 
     /**
@@ -54,9 +52,7 @@ class BookController
         $oldImage = Utils::request('oldImage');
 
         if (empty($title) || empty($author) || empty($description) || is_null($available)) {
-            $view = new View('Ajouter un livre');
-            $view->render('bookFormUpdate', ['emptyError' => 'Tous les champs sont obligatoires']);
-            exit();
+            Utils::redirectWithoutParamsInUrl('bookFormUpdate', ['emptyError' => 'Tous les champs sont obligatoires']);
         }
 
         $errors = $this->valideAddBookData($title, $author, $description, $available);
@@ -64,7 +60,6 @@ class BookController
         $title = htmlspecialchars($title, ENT_QUOTES);
         $author = htmlspecialchars($author, ENT_QUOTES);
         $description = htmlspecialchars($description, ENT_QUOTES);
-//        $booleanAvailable = htmlspecialchars($available, ENT_QUOTES);
 
         $allowedMineType = ['image/jpeg', 'image/png'];
 
@@ -84,9 +79,7 @@ class BookController
                     $image = Utils::uploadImageFile($image, 'books', BOOKS_IMAGE_PATH);
 
                 } else {
-                    $view = new View('Ajouter un livre');
-                    $view->render('bookFormUpdate', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
-                    exit();
+                    Utils::redirectWithoutParamsInUrl('bookFormUpdate', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
                 }
             } else {
                 $image = $oldImage;
@@ -107,8 +100,7 @@ class BookController
             Utils::redirect('userAccount');
 
         } else {
-
-            Utils::redirect('bookFormUpdate', ['errors' => $errors]);
+            Utils::redirectWithoutParamsInUrl('bookFormUpdate', ['errors' => $errors]);
         }
     }
 
@@ -149,9 +141,7 @@ class BookController
         $image = null;
 
         if (empty($title) || empty($author) || empty($description) || empty($available)) {
-            $view = new View('Ajouter un livre');
-            $view->render('bookFormCreate', ['emptyError' => 'Tous les champs sont obligatoires.']);
-            exit();
+            Utils::redirectWithoutParamsInUrl('bookFormCreate', ['emptyError' => 'Tous les champs sont obligatoires.']);
         }
 
         $errors = $this->valideAddBookData($title, $author, $description, $available);
@@ -180,9 +170,7 @@ class BookController
                     $image = Utils::uploadImageFile($image, 'books', BOOKS_IMAGE_PATH);
 
                 } else {
-                    $view = new View('Ajouter un livre');
-                    $view->render('bookFormCreate', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
-                    exit();
+                    Utils::redirectWithoutParamsInUrl('bookFormCreate', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
                 }
             }
 
@@ -202,9 +190,7 @@ class BookController
             Utils::redirect('bookDetails');
 
         } else {
-            $view = new View('Ajouter un livre');
-            $view->render('bookFormCreate', ['errors' => $errors]);
-            exit();
+            Utils::redirectWithoutParamsInUrl('bookFormCreate', ['errors' => $errors]);
         }
     }
 }

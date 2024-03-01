@@ -1,4 +1,6 @@
 <?php
+    $user = $_SESSION['user'];
+    $userBooks  = $_SESSION['userBooks'];
 ?>
 
 <section class="user-account">
@@ -12,13 +14,26 @@
                     <input type="file" name="imageToUpload" id="imageToUpload" style="display: none;">
                     <a href="#" id="new-user-image-link">modifier</a>
                     <input type="submit" id="submit-new-image" style="display: none;" >
+                    <div class="error-box">
+                        <?php
+                            if (isset($emptyError)) {
+                                echo $emptyError;
+                            } elseif (isset($formatError)) {
+                                echo $formatError;
+                            } elseif (isset($errors)) {
+                                foreach ($errors as $error => $value) {
+                                    echo $value.'<br/>';
+                                }
+                            }
+                        ?>
+                    </div>
                 </form>
             </div>
             <div class="user-informations-details">
                 <p class="user-informations-username"><?= $user->getUsername() ?></p>
                 <p class="user-informations-seniority">Membre depuis <?= $user->getTimeSinceRegistration() ?></p>
                 <p class="user-informations-library">BIBLIOTHÈQUE</p>
-                <p class="user-informations-nb-book"><?= count($userBooks)?> <?= count($userBooks) > 1 ? 'livres' : 'livre' ?></p>
+                <p class="user-informations-nb-book"><?= count($userBooks)?> <?= count($userBooks) < 1 ? 'aucun livre' : 'livre(s)' ?></p>
             </div>
             
         </div>
