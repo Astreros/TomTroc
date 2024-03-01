@@ -1027,3 +1027,122 @@ thead tr th {
         margin-top: 80px;
     }
 }
+
+/* Section "book-form" */
+
+.book-form {
+    background-color: var(--backgroundColorLight);
+    padding: 5% 10%;
+}
+
+.book-form-head {
+
+}
+
+.book-form-head h2 {
+    margin: 10px;
+}
+
+.book-form-head a {
+    color: var(--textColorLight);
+    text-decoration: none;
+    font-size: .875rem;
+}
+
+.book-form form {
+    display: flex;
+    background-color: #FFFFFF;
+    margin: auto;
+    padding: 20px;
+}
+
+.book-form form input:not(#imageToUpload, #submit), #description, #available {
+    margin-bottom: 20px;
+    width: 100%;
+    height: 50px;
+    border-radius: 6px;
+    border: #F0F0F0 solid 1px;
+    background-color: #EDF2F6;
+    padding-left: 10px;
+}
+
+.book-form form label {
+    color: var(--textColorLight);
+    font-size: .875rem;
+    margin: 10px 0;
+}
+
+.left-book-form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    margin: 0 auto;
+}
+
+.left-book-form img {
+    object-fit: cover;
+    width: auto;
+    height: 488px;
+}
+
+.right-book-form {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    margin: auto;
+}
+
+textarea[name="description"] {
+    resize: none;
+    /*min-width: auto;*/
+    width: 80%;
+    padding: 10px;
+    min-height: 300px;
+    overflow: scroll;
+}
+
+.book-form input[type='submit'] {
+    border: none;
+    color: var(--textColorWhite);
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 22px 38px;
+    margin: 30px 0;
+    background-color: var(--greenMain);
+    border-radius: 10px;
+}
+
+
+/* Section Section "book-form" RESPONSIVE */
+
+@media screen and (max-width: 1024px) {
+    .book-form {
+        padding: 0;
+    }
+
+    .book-form form {
+        flex-wrap: wrap;
+        padding: 0;
+        margin: 0;
+    }
+
+    .left-book-form {
+        object-fit: cover;
+        width: 80%;
+    }
+
+    .right-book-form {
+        margin-top: 50px;
+        width: 80%;
+    }
+
+    textarea[name="description"] {
+        max-width: none;
+        width: 80%;
+    }
+
+    .book-form-head {
+        padding: 50px;
+    }
+}

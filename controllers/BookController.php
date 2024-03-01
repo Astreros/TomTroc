@@ -59,7 +59,7 @@ class BookController
 
         $title = htmlspecialchars($title, ENT_QUOTES);
         $author = htmlspecialchars($author, ENT_QUOTES);
-        $description = htmlspecialchars($description, ENT_QUOTES);
+        $description = Utils::protectedStringFormat($description);
 
         $allowedMineType = ['image/jpeg', 'image/png'];
 
