@@ -16,14 +16,8 @@
                     <input type="submit" id="submit-new-image" style="display: none;" >
                     <div class="error-box">
                         <?php
-                            if (isset($emptyError)) {
-                                echo $emptyError;
-                            } elseif (isset($formatError)) {
+                            if (isset($formatError)) {
                                 echo $formatError;
-                            } elseif (isset($errors)) {
-                                foreach ($errors as $error => $value) {
-                                    echo $value.'<br/>';
-                                }
                             }
                         ?>
                     </div>
@@ -33,7 +27,7 @@
                 <p class="user-informations-username"><?= $user->getUsername() ?></p>
                 <p class="user-informations-seniority">Membre depuis <?= $user->getTimeSinceRegistration() ?></p>
                 <p class="user-informations-library">BIBLIOTHÈQUE</p>
-                <p class="user-informations-nb-book"><?= count($userBooks)?> <?= count($userBooks) < 1 ? 'aucun livre' : 'livre(s)' ?></p>
+                <p class="user-informations-nb-book"><?= count($userBooks) > 1 ? count($userBooks) . ' livres' : (count($userBooks) === 1 ? '1 livre' : 'aucun livre') ?></p>
             </div>
             
         </div>
@@ -50,8 +44,24 @@
                 <label for="username">Pseudo</label>
                 <input type="text" id="username" name="username" minlength="3" maxlength="32" required value="<?= $user->getUsername() ?>">
 
+
+
                 <input type="submit" <?= Utils::askConfirmation("Êtes-vous sûr de valider ces informations ? Vous allez être déconnectés.") ?> value="Enregistrer" >
             </form>
+
+            <div class="error-box">
+                <?php
+                if (isset($emptyError)) {
+                    echo $emptyError;
+                } elseif (isset($alreadyExistsError)) {
+                    echo $alreadyExistsError;
+                } elseif (isset($errors)) {
+                    foreach ($errors as $error => $value) {
+                        echo $value.'<br/>';
+                    }
+                }
+                ?>
+            </div>
         </div>
 
         <div class="user-library tab-active">
