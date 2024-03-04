@@ -6,6 +6,20 @@
 <section class="user-account">
     <h2>Mon compte</h2>
 
+    <div class="error-box">
+        <?php
+        if (isset($emptyError)) {
+            echo $emptyError;
+        } elseif (isset($alreadyExistsError)) {
+            echo $alreadyExistsError;
+        } elseif (isset($errors)) {
+            foreach ($errors as $error => $value) {
+                echo $value.'<br/>';
+            }
+        }
+        ?>
+    </div>
+
     <div class="user-account-details">
         <div class="user-informations">
             <div class="user-informations-image">
@@ -48,20 +62,6 @@
 
                 <input type="submit" <?= Utils::askConfirmation("Êtes-vous sûr de valider ces informations ? Vous allez être déconnectés.") ?> value="Enregistrer" >
             </form>
-
-            <div class="error-box">
-                <?php
-                if (isset($emptyError)) {
-                    echo $emptyError;
-                } elseif (isset($alreadyExistsError)) {
-                    echo $alreadyExistsError;
-                } elseif (isset($errors)) {
-                    foreach ($errors as $error => $value) {
-                        echo $value.'<br/>';
-                    }
-                }
-                ?>
-            </div>
         </div>
 
         <div class="user-library tab-active">

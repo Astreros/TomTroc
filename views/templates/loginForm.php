@@ -5,6 +5,14 @@
     <div class="registration-connexion-form">
         <h2>Connexion</h2>
 
+        <div class="success-box">
+            <?php
+                if (isset($success)) {
+                    echo $success;
+                }
+            ?>
+        </div>
+
         <form method="POST" action="index.php?action=login">
 
             <label for="email">Adresse email</label>

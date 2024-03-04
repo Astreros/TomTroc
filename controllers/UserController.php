@@ -227,17 +227,13 @@ class UserController
             $userManager = new UserManager();
             $userManager->updateUser($user);
 
+            unset($_SESSION['user']);
+
             Utils::redirectWithoutParamsInUrl('loginForm', ['success' => 'Vos informations ont bien été mise à jours.']);
 
         } else {
 
             Utils::redirectWithoutParamsInUrl('userAccount', ['errors' => $errors]);
         }
-    }
-
-    #[NoReturn] public function disconnectUser($route): void
-    {
-        unset($_SESSION['user']);
-        Utils::redirect($route);
     }
 }

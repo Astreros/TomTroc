@@ -648,6 +648,12 @@ input[type="submit"] {
     text-align: center;
 }
 
+.success-box {
+    color: var(--greenMain);
+    font-size: .875rem;
+    padding: 10px 5px;
+    text-align: center;
+}
 
 /* Section "registration-page" --RESPONSIVE-- */
 
