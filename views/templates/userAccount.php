@@ -86,7 +86,7 @@
                                 <th class="user-library-details-description"><?= substr($book->getDescription(), 0, 80) ?><?= strlen($book->getDescription()) > 80 ? '...' : ''?></th>
                             <?php
                                 if (!$book->getAvailable()) { ?>
-                                    <th class="user-library-details-available"><div class="not-available">non disponible</div></th>
+                                    <th class="user-library-details-available"><div class="not-available">non dispo.</div></th>
                                 <?php } else { ?>
                                     <th class="user-library-details-available"><div class="available">disponible</div></th>
                                 <?php }

@@ -85,7 +85,7 @@ class UserController
         $errors = [];
 
         if(!preg_match(USERNAME_REGEX_CHECK, $username)) {
-            $errors['username'] = "Non d'utilisateur: 3 à 32 caractères alphanumériques uniquement.";
+            $errors['username'] = "Non d'utilisateur: 3 à 32 caractères alphanumériques et underscore.";
         }
 
         if(!preg_match(EMAIL_REGEX_CHECK, $email)) {
@@ -93,7 +93,7 @@ class UserController
         }
 
         if(!preg_match(PASSWORD_REGEX_CHECK, $password)) {
-            $errors['password'] = "Mot de passe: 12 à 72 caractères alphanumériques, dont une majuscule.";
+            $errors['password'] = "Mot de passe: minimum 12 caractères alphanumériques et caractère spéciaux, dont une majuscule.";
         }
 
         return $errors;
