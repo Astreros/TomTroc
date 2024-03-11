@@ -68,4 +68,17 @@ class Book extends AbstractEntity
     {
         return $this->seller;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'creation_date' => $this->getCreationDate(),
+            'title' => $this->getTitle(),
+            'author' => $this->getAuthor(),
+            'description' => $this->getDescription(),
+            'image' => $this->getImage(),
+            'available' => $this->getAvailable()
+        ];
+    }
 }

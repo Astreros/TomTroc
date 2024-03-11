@@ -8,15 +8,23 @@
 
     <div class="error-box">
         <?php
-        if (isset($emptyError)) {
-            echo $emptyError;
-        } elseif (isset($alreadyExistsError)) {
-            echo $alreadyExistsError;
-        } elseif (isset($errors)) {
-            foreach ($errors as $error => $value) {
-                echo $value.'<br/>';
+            if (isset($emptyError)) {
+                echo $emptyError;
+            } elseif (isset($alreadyExistsError)) {
+                echo $alreadyExistsError;
+            } elseif (isset($errors)) {
+                foreach ($errors as $error => $value) {
+                    echo $value.'<br/>';
+                }
             }
-        }
+        ?>
+    </div>
+
+    <div class="success-box">
+        <?php
+            if (isset($deleteSuccess)) {
+                echo $deleteSuccess;
+            }
         ?>
     </div>
 
@@ -41,7 +49,7 @@
                 <p class="user-informations-username"><?= $user->getUsername() ?></p>
                 <p class="user-informations-seniority">Membre depuis <?= $user->getTimeSinceRegistration() ?></p>
                 <p class="user-informations-library">BIBLIOTHÈQUE</p>
-                <p class="user-informations-nb-book"><?= count($userBooks) > 1 ? count($userBooks) . ' livres' : (count($userBooks) === 1 ? '1 livre' : 'aucun livre') ?></p>
+                <p class="user-informations-nb-book"><?= count($userBooks) > 1 ? count($userBooks) . ' livres' : (count($userBooks) === 1 ? '1 livre' : 'aucun livre') ?></p> <a href="index.php?action=bookFormCreate">Ajouter un livre</a>
             </div>
             
         </div>
@@ -57,8 +65,6 @@
 
                 <label for="username">Pseudo</label>
                 <input type="text" id="username" name="username" minlength="3" maxlength="32" required value="<?= $user->getUsername() ?>">
-
-
 
                 <input type="submit" <?= Utils::askConfirmation("Êtes-vous sûr de valider ces informations ? Vous allez être déconnectés.") ?> value="Enregistrer" >
             </form>
@@ -91,11 +97,10 @@
                                     <th class="user-library-details-available"><div class="available">disponible</div></th>
                                 <?php }
                             ?>
-                                <th class="user-library-details-actions"><a class="action-edit" href="index.php?action=bookFormUpdate&id=<?= $book->getId() ?>">Éditer</a> <a class="action-delete" href="index.php?action=deleteBook&id=<?= $book->getId() ?>" <?= Utils::askConfirmation("Êtes-vous sûr de vouloir supprimer ce livre ?") ?>>Supprimer</a></th>
+                                <th class="user-library-details-actions"><a class="action-edit" href="index.php?action=bookFormUpdate&id=<?= $book->getId() ?>">Éditer</a> <a class="action-delete" href="index.php?action=deleteBook&idBookToBeDeleted=<?= $book->getId() ?>" <?= Utils::askConfirmation("Êtes-vous sûr de vouloir supprimer ce livre ?") ?>>Supprimer</a></th>
                             </tr><?php
                         }
                     ?>
-
                 </tbody>
             </table>
         </div>
@@ -121,7 +126,7 @@
 
                     <div class="user-library-details-description"><?= substr($book->getDescription(), 0, 80) ?><?= strlen($book->getDescription()) > 80 ? '...' : ''?></div>
                     <div class="user-library-details-actions">
-                        <a class="action-edit" href="index.php?action=bookFormUpdate&id=<?= $book->getId() ?>">Éditer</a> <a class="action-delete" href="index.php?action=deleteBook&id=<?= $book->getId() ?>" <?= Utils::askConfirmation("Êtes-vous sûr de vouloir supprimer ce livre ?") ?>>Supprimer</a>
+                        <a class="action-edit" href="index.php?action=bookFormUpdate&id=<?= $book->getId() ?>">Éditer</a> <a class="action-delete" href="index.php?action=deleteBook&idBookToBeDeleted=<?= $book->getId() ?>" <?= Utils::askConfirmation("Êtes-vous sûr de vouloir supprimer ce livre ?") ?>>Supprimer</a>
                     </div>
                 </div>
             <?php

@@ -236,4 +236,13 @@ class UserController
             Utils::redirectWithoutParamsInUrl('userAccount', ['errors' => $errors]);
         }
     }
+
+    public function disconnectUser(): void
+    {
+        if (isset($_SESSION['user'])) {
+
+            unset($_SESSION['user']);
+            Utils::redirect('home');
+        }
+    }
 }

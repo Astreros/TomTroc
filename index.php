@@ -103,6 +103,11 @@
                 $userController->updateUserImage();
                 break;
 
+            case 'deleteBook':
+                $bookController = new BookController();
+                $bookController->deleteBook();
+                break;
+
             case 'messaging':
                 $messagingController = new MessagingController();
                 $messagingController->showMessaging();

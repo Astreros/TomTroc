@@ -50,11 +50,12 @@ class BookManager extends AbstractEntityManager
     public function getSearchBookResultByTitle(string $userQuery): array|null
     {
         $books = [];
-        $userQuery = "%" . $userQuery . "%";
+        $userQuery = "[[:<:]]" . $userQuery . "[[:>:]]";
+        $userQuery2 = "^" . $userQuery;
 
-        $statement = "SELECT books.*, books.Id_books AS id, users.username AS seller FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE title LIKE :query AND  available = TRUE";
+        $statement = "SELECT books.*, books.Id_books AS id, users.username AS seller FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE LOWER(title) REGEXP :query OR LOWER(title ) LIKE :query2 AND  available = TRUE";
 
-        $result = $this->database->query($statement, ['query' => $userQuery]);
+        $result = $this->database->query($statement, ['query' => $userQuery, 'query2' => $userQuery2]);
 
         while ($book = $result->fetch()) {
             $books[] = new Book($book);

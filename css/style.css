@@ -1201,7 +1201,7 @@ textarea[name="description"] {
     align-items: center;
 }
 
-.contact-discussion, h2 {
+.overall-threads h2, .contact-discussion {
     margin: 20px 40px;
 }
 

@@ -9,8 +9,8 @@
      */
     class DatabaseManager
     {
-        private static $instance;
-        private $database;
+        private static ?DatabaseManager $instance = null;
+        private PDO $database;
 
         private  function __construct()
         {

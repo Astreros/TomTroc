@@ -94,17 +94,24 @@ class Utils
         }
     }
 
-    public static function uploadImageFile(array $image, string $category, string $path): string|null
+    public static function uploadImageFile(array $image, string $category, string $directory): array
     {
         $imageFileType = pathinfo($image['name'], PATHINFO_EXTENSION);
         $imageName = uniqid($category, true) . '.' . $imageFileType;
-        $imagePath = $path . $imageName;
+        $imagePath = $directory . $imageName;
 
         if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
-            return null;
+            $error = error_get_last();
+            return [
+                'success' => false,
+                'message' => "Erreur lors du téléchargement du fichier : " . $error['message']
+            ];
         }
 
-        return $imagePath;
+        return [
+            'success' => true,
+            'message' => $imagePath
+        ];
     }
 
     public static function deleteImageFile($imageName): void

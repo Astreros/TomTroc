@@ -71,5 +71,6 @@
             </nav>
         </footer>
         <script src="../../js/index.js" crossorigin="anonymous"></script>
+
     </body>
 </html>

@@ -11,7 +11,7 @@ class BookController
     {
         Utils::checkIfUserIsConnected();
 
-        Utils::redirect('bookFormCreate');
+        Utils::redirectWithoutParamsInUrl('bookFormCreate');
     }
 
     /**
@@ -34,98 +34,79 @@ class BookController
             Utils::redirectWithoutParamsInUrl('userAccount', ['errorBookHasNotBeenFound' => 'Le livre à mettre à jour n\'a pas été trouvé. ']);
         }
 
-        $_SESSION['bookToBeUpdated'] = $bookToBeUpdated;
-
+        $_SESSION['bookToBeUpdated'] = $bookToBeUpdated->toArray();
         Utils::redirectWithoutParamsInUrl('bookFormUpdate');
     }
 
     /**
      * @throws Exception
      */
-    #[NoReturn] public function UpdatingBook(): null
+    #[NoReturn] public function UpdatingBook(): void
     {
-        $bookId = Utils::request('id');
-        $title = strip_tags(Utils::request('title'));
-        $author = strip_tags(Utils::request('author'));
-        $description = strip_tags(Utils::request('description'));
-        $available = strip_tags(Utils::request('available'));
-        $oldImage = Utils::request('oldImage');
+        $rawData = [
+            'id'=> strip_tags(Utils::request('id')),
+            'title' => strip_tags(Utils::request('title')),
+            'author' => strip_tags(Utils::request('author')),
+            'description' => strip_tags(Utils::request('description')),
+            'image' => $_FILES['imageToUpload'],
+            'available' => strip_tags(Utils::request('available')),
+            'oldImage' => strip_tags(Utils::request('oldImage'))
+        ];
 
-        if (empty($title) || empty($author) || empty($description) || is_null($available)) {
-            Utils::redirectWithoutParamsInUrl('bookFormUpdate', ['emptyError' => 'Tous les champs sont obligatoires']);
-        }
+        $bookValidator = new BookValidator();
+        $imageValidator = new ImageValidator();
 
-        $errors = $this->valideAddBookData($title, $author, $description, $available);
+        $bookErrors = $bookValidator->validate($rawData);
 
-        $title = htmlspecialchars($title, ENT_QUOTES);
-        $author = htmlspecialchars($author, ENT_QUOTES);
-        $description = Utils::protectedStringFormat($description);
+        if ($_FILES['imageToUpload']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $imageErrors = $imageValidator->validate($rawData);
 
-        $allowedMineType = ['image/jpeg', 'image/png'];
-
-        if (count($errors) === 0) {
-
-            if ($_FILES['imageToUpload']['error'] !== UPLOAD_ERR_NO_FILE) {
-
-                $image = $_FILES['imageToUpload'];
-
-                $fileMimeType = finfo_open(FILEINFO_MIME_TYPE);
-                $typeMine = finfo_file($fileMimeType, $image['tmp_name']);
-                finfo_close($fileMimeType);
-
-                if (in_array($typeMine, $allowedMineType, true)) {
-
-                    Utils::deleteImageFile($oldImage);
-                    $image = Utils::uploadImageFile($image, 'books', BOOKS_IMAGE_PATH);
-
-                } else {
-                    Utils::redirectWithoutParamsInUrl('bookFormUpdate', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
-                }
-            } else {
-                $image = $oldImage;
+            if (!empty($bookErrors) || !empty($imageErrors)) {
+                Utils::redirectWithoutParamsInUrl('bookFormUpdate', [
+                    'errors' => array_merge($bookErrors, $imageErrors),
+                    'tempData' => $rawData
+                ]);
             }
 
-            $book = [
-                'id' => $bookId,
-                'title' => $title,
-                'author' => $author,
-                'description' => $description,
-                'image' => $image,
-                'available' => $available,
-            ];
+            $imagePath = Utils::uploadImageFile($rawData['image'], 'books', BOOKS_IMAGE_DIRECTORY);
 
-            $bookManager = new BookManager();
-            $bookManager->updateBook($book);
+            if (!$imagePath['success']) {
+                Utils::redirectWithoutParamsInUrl('bookFormCreate', [
+                    'errors' => $imagePath['message'],
+                    'tempData' => $rawData
+                ]);
+            } else {
+                $imagePath = $imagePath['message'];
+            }
 
-            Utils::redirect('userAccount');
+            Utils::deleteImageFile($rawData['oldImage']);
 
         } else {
-            Utils::redirectWithoutParamsInUrl('bookFormUpdate', ['errors' => $errors]);
+            $imagePath = $rawData['oldImage'];
         }
+
+        if (!empty($bookErrors)) {
+            Utils::redirectWithoutParamsInUrl('bookFormUpdate', [
+                'errors' => $bookErrors,
+                'tempData' => $rawData
+            ]);
+        }
+
+        $book = [
+            'id' => $rawData['id'],
+            'title' => $rawData['title'],
+            'author' => $rawData['author'],
+            'description' => $rawData['description'],
+            'image' => $imagePath,
+            'available' => $rawData['available'],
+        ];
+
+        $bookManager = new BookManager();
+        $bookManager->updateBook($book);
+
+        Utils::redirect('userAccount');
     }
 
-    public function valideAddBookData(string $title, string $author, string $description, string $available): array
-    {
-        $errors = [];
-
-        if(!preg_match(BOOK_TITLE_CHECK, $title)) {
-            $errors['title'] = "Format du titre invalide. 3 à 144 caractères alphanumériques uniquement.";
-        }
-
-        if(!preg_match(BOOK_AUTHOR_CHECK, $author)) {
-            $errors['author'] = "Format de l'auteur invalide. 3 à 32 caractères alphanumériques uniquement.";
-        }
-
-        if(!preg_match(BOOK_DESCRIPTION_CHECK, $description)) {
-            $errors['description'] = "Format de la description invalide. 50 à 500 caractères (UTF-8).";
-        }
-
-        if(!($available === '1' || $available === '0')) {
-            $errors['available'] = "Champs de disponibilité invalide.";
-        }
-
-        return $errors;
-    }
 
     /**
      * @throws Exception
@@ -134,63 +115,81 @@ class BookController
     {
         $userId = $_SESSION['user']->getId();
 
-        $title = strip_tags(Utils::request('title'));
-        $author = strip_tags(Utils::request('author'));
-        $description = strip_tags(Utils::request('description'));
-        $available = strip_tags(Utils::request('available'));
-        $image = null;
+        $rawData = [
+            'title' => strip_tags(Utils::request('title')),
+            'author' => strip_tags(Utils::request('author')),
+            'description' => strip_tags(Utils::request('description')),
+            'image' => $_FILES['imageToUpload'],
+            'available' => strip_tags(Utils::request('available'))
+        ];
 
-        if (empty($title) || empty($author) || empty($description) || empty($available)) {
-            Utils::redirectWithoutParamsInUrl('bookFormCreate', ['emptyError' => 'Tous les champs sont obligatoires.']);
-        }
+        $bookValidator = new BookValidator();
+        $imageValidator = new ImageValidator();
 
-        $errors = $this->valideAddBookData($title, $author, $description, $available);
+        $bookErrors = $bookValidator->validate($rawData);
+        $imageErrors = $imageValidator->validate($rawData);
 
-        $title = htmlspecialchars($title, ENT_QUOTES);
-        $author = htmlspecialchars($author, ENT_QUOTES);
-        $description = Utils::protectedStringFormat($description);
-        $available = htmlspecialchars($available, ENT_QUOTES);
-
-        $booleanAvailable = $available === "true";
-
-
-        $allowedMineType = ['image/jpeg', 'image/png'];
-
-        if (count($errors) === 0) {
-
-            if (isset($_FILES['imageToUpload']) && $_FILES['imageToUpload']['error'] !== UPLOAD_ERR_NO_FILE) {
-                $image = $_FILES['imageToUpload'];
-
-                $fileMimeType = finfo_open(FILEINFO_MIME_TYPE);
-                $typeMine = finfo_file($fileMimeType, $image['tmp_name']);
-                finfo_close($fileMimeType);
-
-                if (in_array($typeMine, $allowedMineType, true)) {
-
-                    $image = Utils::uploadImageFile($image, 'books', BOOKS_IMAGE_PATH);
-
-                } else {
-                    Utils::redirectWithoutParamsInUrl('bookFormCreate', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
-                }
-            }
-
-            $book = new Book([
-                'title' => $title,
-                'author' => $author,
-                'description' => $description,
-                'image' => $image,
-                'available' => $booleanAvailable,
-                'creation_date' => new DateTime(),
-                'id' => $userId
+        if (!empty($bookErrors) || !empty($imageErrors)) {
+            Utils::redirectWithoutParamsInUrl('bookFormCreate', [
+                'errors' => array_merge($bookErrors, $imageErrors),
+                'tempData' => $rawData
             ]);
-
-            $bookManager = new BookManager();
-            $bookManager->addBook($book, $userId);
-
-            Utils::redirect('bookDetails');
-
-        } else {
-            Utils::redirectWithoutParamsInUrl('bookFormCreate', ['errors' => $errors]);
         }
+
+        $imagePath = Utils::uploadImageFile($rawData['image'], 'books', BOOKS_IMAGE_DIRECTORY);
+
+        if (!$imagePath['success']) {
+            Utils::redirectWithoutParamsInUrl('bookFormCreate', [
+                'errors' => $imagePath['message'],
+                'tempData' => $rawData
+            ]);
+        } else {
+            $imagePath = $imagePath['message'];
+        }
+
+        $book = new Book([
+            'title' => htmlspecialchars($rawData['title'], ENT_QUOTES),
+            'author' => htmlspecialchars($rawData['author'], ENT_QUOTES),
+            'description' => htmlspecialchars($rawData['description'], ENT_QUOTES),
+            'image' => $imagePath,
+            'available' => htmlspecialchars($rawData['available'], ENT_QUOTES),
+            'creation_date' => new DateTime()
+        ]);
+
+        $bookManager = new BookManager();
+        $bookManager->addBook($book, $userId);
+
+        Utils::redirect('bookDetails');
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[NoReturn] public function deleteBook(): void
+    {
+        $idBookToBeDeleted = $_REQUEST['idBookToBeDeleted'];
+
+        if (empty($idBookToBeDeleted)) {
+            Utils::redirectWithoutParamsInUrl('userAccount', ['deleteError' => 'Aucun livre à supprimer']);
+        }
+
+        $bookManager = new BookManager();
+        $bookToBeDeleted = $bookManager->getBookById($idBookToBeDeleted);
+
+        if ($bookToBeDeleted === null) {
+            Utils::redirectWithoutParamsInUrl('userAccount', ['errors' => 'Livre non trouvé.']);
+        }
+
+        $imageBookToBeDeleted = $bookToBeDeleted->getImage();
+
+        if ($imageBookToBeDeleted === null) {
+            $bookManager->deleteBookById($idBookToBeDeleted);
+
+        }
+
+        Utils::deleteImageFile($imageBookToBeDeleted);
+        $bookManager->deleteBookById($idBookToBeDeleted);
+
+        Utils::redirect('userAccount');
     }
 }
