@@ -45,17 +45,6 @@ class UserController
         Utils::redirectWithoutParamsInUrl('registrationForm');
     }
 
-    public function usernameOrEmailAlreadyExists($username, $email) :bool
-    {
-        return (new UserManager())->userExists($username, $email);
-    }
-
-    public function usernameOrEmailAlreadyExistsExceptCurrentUser($username, $email, $id) :bool
-    {
-        return (new UserManager())->exceptCurrentUserExists($username, $email, $id);
-    }
-
-
     /**
      * @throws Exception
      */
@@ -80,69 +69,50 @@ class UserController
         Utils::redirect('userAccount');
     }
 
-    public function validateRegistrationData(string $username, string $email, string $password): array
-    {
-        $errors = [];
-
-        if(!preg_match(USERNAME_REGEX_CHECK, $username)) {
-            $errors['username'] = "Non d'utilisateur: 3 à 32 caractères alphanumériques et underscore.";
-        }
-
-        if(!preg_match(EMAIL_REGEX_CHECK, $email)) {
-            $errors['email'] = "Format d'e-mail invalide.";
-        }
-
-        if(!preg_match(PASSWORD_REGEX_CHECK, $password)) {
-            $errors['password'] = "Mot de passe: minimum 12 caractères alphanumériques et caractère spéciaux, dont une majuscule.";
-        }
-
-        return $errors;
-    }
-
     /**
      * @throws Exception
      */
     #[NoReturn] public function registrationUser(): void
     {
-        $username = strip_tags(Utils::request('username'));
-        $email = strip_tags(Utils::request('email'));
-        $password = strip_tags(Utils::request('password'));
+        $rawData = [
+            'username' => strip_tags(Utils::request('username')),
+            'email' => strip_tags(Utils::request('email')),
+            'password' => strip_tags(Utils::request('password')),
+        ];
 
-        if (empty($email) || empty($password) || empty($username)) {
+        $userValidator = new UserValidator();
 
-            Utils::redirectWithoutParamsInUrl('registrationForm', ['emptyError' => "Tous les champs sont obligatoires."]);
+        $userErrors = $userValidator->validate($rawData);
+
+        if (!empty($userErrors)) {
+            Utils::redirectWithoutParamsInUrl('registrationForm', [
+                'errors' => $userErrors,
+            ]);
         }
 
-        $usernameOrEmailAlreadyExists = $this->usernameOrEmailAlreadyExists($username, $email);
-        $errors = $this->validateRegistrationData($username, $email, $password);
-
-        $username = htmlspecialchars($username, ENT_QUOTES);
-        $email = htmlspecialchars($email, ENT_QUOTES);
-        $password = htmlspecialchars($password, ENT_QUOTES);
+        $usernameOrEmailAlreadyExists = $this->usernameOrEmailAlreadyExists($rawData['username'], $rawData['email']);
 
         if ($usernameOrEmailAlreadyExists) {
-
-            Utils::redirectWithoutParamsInUrl('registrationForm', ['alreadyExistsError' => "Nom d'utilisateur ou l'adresse mail est déjà utilisés."]);
-
-        } elseif (count($errors) === 0) {
-
-            $password = password_hash($password, PASSWORD_DEFAULT);
-
-            $user = new User([
-                'username' => $username,
-                'email' => $email,
-                'password' => $password,
-                'creationDate' => new DateTime()
+            Utils::redirectWithoutParamsInUrl('registrationForm', [
+                'errors' => "Le nom d'utilisateur ou l'adresse mail sont déjà utilisés."
             ]);
-
-            $userManager = new UserManager();
-            $userManager->addUser($user);
-
-            Utils::redirect('loginForm');
-
-        } else {
-            Utils::redirectWithoutParamsInUrl('registrationForm', ['errors' => $errors]);
         }
+
+        $password = password_hash($rawData['password'], PASSWORD_DEFAULT);
+
+        $user = new User([
+            'username' => htmlspecialchars($rawData['username']),
+            'email' => htmlspecialchars($rawData['email']),
+            'password' => $password,
+            'creationDate' => new DateTime(),
+        ]);
+
+        $userManager = new UserManager();
+        $userManager->addUser($user);
+
+        Utils::redirectWithoutParamsInUrl('loginForm', [
+            'success' => 'Votre compte à été crée avec succès.'
+        ]);
     }
 
     /**
@@ -150,37 +120,43 @@ class UserController
      */
     #[NoReturn] public function updateUserImage(): void
     {
+        Utils::checkIfUserIsConnected();
+
         $id = $_SESSION['user']->getId();
+        $image = $_FILES['imageToUpload'];
         $oldImage = $_SESSION['user']->getImage();
 
-        $allowedMineType = ['image/jpeg', 'image/png'];
+        $imageValidator = new ImageValidator();
+        $imageErrors = $imageValidator->validate([
+            'image' => $image
+        ]);
 
-        if ($_FILES['imageToUpload']['error'] !== UPLOAD_ERR_NO_FILE) {
-
-            $image = $_FILES['imageToUpload'];
-
-            $fileMimeType = finfo_open(FILEINFO_MIME_TYPE);
-            $typeMine = finfo_file($fileMimeType, $image['tmp_name']);
-            finfo_close($fileMimeType);
-
-            if (in_array($typeMine, $allowedMineType, true)) {
-
-                Utils::deleteImageFile($oldImage);
-                $image = Utils::uploadImageFile($image, 'users', USERS_IMAGE_PATH);
-
-            } else {
-                Utils::redirectWithoutParamsInUrl('userAccount', ['formatError' => 'Uniquement les images JPEG et PNG sont acceptées.']);
-            }
-        } else {
-            $image = $oldImage;
+        if (!empty($imageErrors)) {
+            Utils::redirectWithoutParamsInUrl('userAccount', [
+                'errors' => $imageErrors
+            ]);
         }
 
+        $imagePath = Utils::uploadImageFile($image, 'users', USERS_IMAGE_DIRECTORY);
+
+        if (!$imagePath['success']) {
+            Utils::redirectWithoutParamsInUrl('userAccount', [
+                'errors' => $imagePath['message']
+            ]);
+        } else {
+            $imagePath = $imagePath['message'];
+        }
+
+        Utils::deleteImageFile($oldImage);
+
         $userManager = new UserManager();
-        $userManager->updateImageUserOnly($image, $id);
+        $userManager->updateImageUserOnly($imagePath, $id);
 
-        $_SESSION['user']->setImage($image);
+        $_SESSION['user']->setImage($imagePath);
 
-        Utils::redirectWithoutParamsInUrl('userAccount');
+        Utils::redirectWithoutParamsInUrl('userAccount', [
+            'success' => 'Votre image à bien été mise à jour.'
+        ]);
     }
 
     /**
@@ -192,55 +168,66 @@ class UserController
 
         $id = $_SESSION['user']->getId();
 
-        $username = strip_tags(Utils::request('username'));
-        $email = strip_tags(Utils::request('email'));
-        $password = strip_tags(Utils::request('password'));
-        $image = $_SESSION['user']->getImage();
+        $rawData = [
+            'username' => strip_tags(Utils::request('username')),
+            'email' => strip_tags(Utils::request('email')),
+            'password' => strip_tags(Utils::request('password')),
+        ];
 
-        if (empty($email) || empty($password) || empty($username)) {
-            Utils::redirectWithoutParamsInUrl('userAccount', ['emptyError' => 'Tous les champs sont obligatoires.']);
-        }
+        $userValidator = new UserValidator();
 
-        $usernameOrEmailAlreadyExists = $this->usernameOrEmailAlreadyExistsExceptCurrentUser($username, $email, $id);
-        $errors = $this->validateRegistrationData($username, $email, $password);
+        $userErrors = $userValidator->validate($rawData);
 
-        $username = htmlspecialchars($username, ENT_QUOTES);
-        $email = htmlspecialchars($email, ENT_QUOTES);
-        $password = htmlspecialchars($password, ENT_QUOTES);
-
-        if ($usernameOrEmailAlreadyExists) {
-            Utils::redirectWithoutParamsInUrl('loginForm', ['alreadyExistsError' => 'Nom d\'utilisateur ou l\'adresse mail est déjà utilisés.']);
-        }
-
-        if (count($errors) === 0) {
-
-            $password = password_hash($password, PASSWORD_DEFAULT);
-
-            $user = new User([
-                'id' => $id,
-                'username' => $username,
-                'email' => $email,
-                'password' => $password,
-                'image'=> $image
+        if (!empty($userErrors)) {
+            Utils::redirectWithoutParamsInUrl('userAccount', [
+                'errors' => $userErrors
             ]);
-
-            $userManager = new UserManager();
-            $userManager->updateUser($user);
-
-            unset($_SESSION['user']);
-
-            Utils::redirectWithoutParamsInUrl('loginForm', ['success' => 'Vos informations ont bien été mise à jours.']);
-
-        } else {
-
-            Utils::redirectWithoutParamsInUrl('userAccount', ['errors' => $errors]);
         }
+
+        $alreadyExists = $this->usernameOrEmailAlreadyExistsExceptCurrentUser(
+            $rawData['username'],
+            $rawData['email'],
+            $id
+        );
+
+        if ($alreadyExists) {
+            Utils::redirectWithoutParamsInUrl('userAccount', [
+                'errors' => "Le nom d'utilisateur ou l'adresse mail sont déjà utilisés."
+            ]);
+        }
+
+        $password = password_hash($rawData['password'], PASSWORD_DEFAULT);
+
+        $user = new User([
+            'id' => $id,
+            'username' => htmlspecialchars($rawData['username']),
+            'email' => htmlspecialchars($rawData['email']),
+            'password' => $password
+        ]);
+
+        $userManager = new UserManager();
+        $userManager->updateUser($user);
+
+        unset($_SESSION['user']);
+
+        Utils::redirectWithoutParamsInUrl('loginForm', [
+            'success' => 'Vos informations ont bien été mise à jours.'
+        ]);
+    }
+
+    public function usernameOrEmailAlreadyExists($username, $email) :bool
+    {
+        return (new UserManager())->userExists($username, $email);
+    }
+
+    public function usernameOrEmailAlreadyExistsExceptCurrentUser($username, $email, $id) :bool
+    {
+        return (new UserManager())->exceptCurrentUserExists($username, $email, $id);
     }
 
     public function disconnectUser(): void
     {
         if (isset($_SESSION['user'])) {
-
             unset($_SESSION['user']);
             Utils::redirect('home');
         }

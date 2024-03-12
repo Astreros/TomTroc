@@ -27,7 +27,7 @@
         <div class="book-details-owner">
             <p class="book-details-subtitle">PROPRIÉTAIRE</p>
             <a class="book-details-owner-photo" href="index.php?action=publicUserAccount&id=<?= $bookUser->getId() ?>">
-                <img src="<?= $bookUser->getImage() ?>" alt="<?= $bookUser->getUsername() ?>">
+                <img src="<?= $bookUser->getImage() ?? USER_IMAGE_DEFAULT_PATH?>" alt="<?= $bookUser->getUsername() ?>">
                 <p><?= $bookUser->getUsername() ?></p>
             </a>
         </div>

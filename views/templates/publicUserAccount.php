@@ -6,7 +6,7 @@
     <div class="user-account-details public">
         <div class="user-informations">
             <div class="user-informations-image">
-                <img src="<?= $publicUserAccount->getImage() ?>" alt="<?= $publicUserAccount->getUsername() ?>">
+                <img src="<?= $publicUserAccount->getImage() ?? USER_IMAGE_DEFAULT_PATH?>" alt="<?= $publicUserAccount->getUsername() ?>">
                 <a href="#">modifier</a>
             </div>
             <div class="user-informations-details">
@@ -30,14 +30,14 @@
                 </thead>
                 <tbody>
                     <?php
-                        foreach ($publicUserBooks as $key => $book) { ?>
-                            <tr class="<?= $key%2 === 1 ? 'light' : ''?>">
-                                <th class="user-library-details-image"><img src="<?= $book->getImage() ?>" alt="<?= $book->getTitle() ?>"></th>
-                                <th class="user-library-details-title"><?= $book->getTitle() ?></th>
-                                <th class="user-library-details-author"><?= $book->getAuthor() ?></th>
-                                <th class="user-library-details-description"><?= substr($book->getDescription(), 0, 80) ?><?= strlen($book->getDescription()) > 80 ? '...' : ''?></th>
-                                </tr><?php
-                            }
+                    foreach ($publicUserBooks as $key => $book) { ?>
+                        <tr class="<?= $key%2 === 1 ? 'light' : ''?>">
+                            <th class="user-library-details-image"><img src="<?= $book->getImage() ?>" alt="<?= $book->getTitle() ?>"></th>
+                            <th class="user-library-details-title"><?= $book->getTitle() ?></th>
+                            <th class="user-library-details-author"><?= $book->getAuthor() ?></th>
+                            <th class="user-library-details-description"><?= substr($book->getDescription(), 0, 80) ?><?= strlen($book->getDescription()) > 80 ? '...' : ''?></th>
+                            </tr><?php
+                        }
                     ?>
                 </tbody>
             </table>
@@ -60,7 +60,5 @@
             <?php
         }
         ?>
-
-
     </div>
 </section>

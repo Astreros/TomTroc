@@ -8,41 +8,30 @@
 
     <div class="error-box">
         <?php
-            if (isset($emptyError)) {
-                echo $emptyError;
-            } elseif (isset($alreadyExistsError)) {
-                echo $alreadyExistsError;
-            } elseif (isset($errors)) {
-                foreach ($errors as $error => $value) {
-                    echo $value.'<br/>';
-                }
+        if (isset($errors)) {
+            foreach ($errors as $error => $value) {
+                echo $value . '<br/>';
             }
+        }
         ?>
     </div>
 
     <div class="success-box">
         <?php
-            if (isset($deleteSuccess)) {
-                echo $deleteSuccess;
-            }
+        if (isset($success)) {
+            echo $success;
+        }
         ?>
     </div>
 
     <div class="user-account-details">
         <div class="user-informations">
             <div class="user-informations-image">
-                <img src="<?= $user->getImage() ?>" alt="<?= $user->getUsername() ?>">
+                <img src="<?= $user->getImage() ?? USER_IMAGE_DEFAULT_PATH?>" alt="<?= $user->getUsername() ?>">
                 <form method="POST" action="index.php?action=updateUserImage"  enctype="multipart/form-data">
                     <input type="file" name="imageToUpload" id="imageToUpload" style="display: none;">
                     <a href="#" id="new-user-image-link">modifier</a>
                     <input type="submit" id="submit-new-image" style="display: none;" >
-                    <div class="error-box">
-                        <?php
-                            if (isset($formatError)) {
-                                echo $formatError;
-                            }
-                        ?>
-                    </div>
                 </form>
             </div>
             <div class="user-informations-details">
