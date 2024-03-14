@@ -1,6 +1,6 @@
 <?php
     $user = $_SESSION['user'];
-    $userBooks  = $_SESSION['userBooks'];
+    $userBooks = $_SESSION['userBooks'] ?? [];
 ?>
 
 <section class="user-account">

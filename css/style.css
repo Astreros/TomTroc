@@ -1208,6 +1208,7 @@ textarea[name="description"] {
 .contact-discussion img, .discussion-link img {
     height: 48px;
     width: 48px;
+    min-width: 48px;
     object-fit: cover;
     border-radius: 50%;
 }
@@ -1229,6 +1230,7 @@ textarea[name="description"] {
 .discussion-link {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 20px 40px;
 }
 
@@ -1236,9 +1238,10 @@ textarea[name="description"] {
     background-color: #FFFFFF;
 }
 
-/*.discussion-info {*/
-
-/*}*/
+.discussion-info {
+    min-width: 120px;
+    margin-right: auto;
+}
 
 .discussion-info .discussion-contact {
     font-size: .875rem;
@@ -1266,17 +1269,25 @@ textarea[name="description"] {
     align-content: flex-end;
 }
 
-.message {
+.message:not(.end) {
     padding: 20px 40px;
+    margin-right: 30%;
 }
 
 .message.end {
-    align-self: flex-end;
+    padding: 20px 40px;
+    align-self: self-end;
+    margin-left: 30%;
+    text-align: right;
 }
 
 .message-info {
     display: flex;
     align-items: center;
+}
+
+.message-info.end {
+    justify-content: flex-end;
 }
 
 .message-info.reverse {
@@ -1352,6 +1363,10 @@ textarea[name="description"] {
     }
     .back-to-overall-threads {
         display: block;
+    }
+    .message {
+        padding: 20px 40px;
+        width: 100%;
     }
 }
 

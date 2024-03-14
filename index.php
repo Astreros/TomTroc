@@ -113,6 +113,11 @@
                 $messagingController->showMessaging();
                 break;
 
+            case 'addMessage':
+                $messagingController = new MessagingController();
+                $messagingController->addMessage();
+                break;
+
             case 'disconnect':
                 $userController = new UserController();
                 $userController->disconnectUser('home');

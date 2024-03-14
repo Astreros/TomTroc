@@ -93,12 +93,12 @@ class BookController
         }
 
         $book = [
-            'id' => $rawData['id'],
-            'title' => $rawData['title'],
-            'author' => $rawData['author'],
-            'description' => $rawData['description'],
+            'id' => htmlspecialchars($rawData['id']),
+            'title' => htmlspecialchars($rawData['title']),
+            'author' => htmlspecialchars($rawData['author']),
+            'description' => htmlspecialchars($rawData['description']),
             'image' => $imagePath,
-            'available' => $rawData['available'],
+            'available' => htmlspecialchars($rawData['available'])
         ];
 
         $bookManager = new BookManager();

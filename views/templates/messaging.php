@@ -1,4 +1,10 @@
 <?php
+    $messageToSend = $tempData ?? null;
+    if (isset($_SESSION['errors'], $_SESSION['tempData'])) {
+        $errors = $_SESSION['errors'];
+        $tempData = $_SESSION['tempData'];
+    }
+
 ?>
 
 <section class="messaging">
@@ -6,66 +12,108 @@
         <h2>Messagerie</h2>
 
         <div class="thread-discussion">
-            <!--  ZONE BOUCLE PHP  -->
-            <a href="#" class="discussion-link selected">
-                <img src="./images/users/adam-winger-aCajfuNQAN4-unsplash.jpg" alt="username">
-                <div class="discussion-info">
-                    <p class="discussion-contact">Hamzalecture</p>
-                    <p class="extract-last-message">Lorem ipsum dolor sit amet...</p>
-                </div>
-                <div class="discussion-date-time">15:43</div>
-            </a>
-            <!--  FIN BOUCLE PHP  -->
+            <?php
+            foreach ($conversations as $conversation) { ?>
+                <?php
+                $lastMessage = end($conversation['messages']);
+
+                // Crée un objet DateTime à partir de la date de création du message
+                $date = new DateTime($lastMessage->getCreationDateString());
+
+                // Détermine si le message a été envoyé aujourd'hui
+                $today = new DateTime('today');
+                $isToday = $date->format('Y-m-d') === $today->format('Y-m-d');
+
+                // Formate la date en fonction de la date d'envoi du message
+                if ($isToday) {
+                    $formattedDate = $date->format('H:i');
+                } else {
+                    $formattedDate = $date->format('d/m');
+                }
+                ?>
+                <a href="index.php?action=messaging&contact=<?= $conversation['interlocutor_id']?>" class="discussion-link -selected">
+                    <img src="<?= $conversation['interlocutor']->getImage() ?>" alt="<?= $conversation['interlocutor']->getUsername() ?>">
+                    <div class="discussion-info">
+                        <p class="discussion-contact"><?= $conversation['interlocutor']->getUsername() ?></p>
+                        <p class="extract-last-message"><?=substr($lastMessage->getContent(), 0, 20) ?><?= strlen($lastMessage->getContent()) > 20 ? '...' : $lastMessage->getContent() ?></p>
+                    </div>
+                    <div class="discussion-date-time"><?= $formattedDate ?></div>
+                </a><?php
+            } ?>
         </div>
     </div>
 
     <div class="view-discussion">
         <a href="index.php?action=messaging" class="back-to-overall-threads"><- retour</a>
-        <div  class="contact-discussion">
-            <img src="./images/users/adam-winger-aCajfuNQAN4-unsplash.jpg" alt="username">
-            <a href="index.php?action=publicUserAccount&id=18"><div class="contact-username">Hamzalecture</div></a>
-        </div>
 
-        <div class="discussion">
-            <!--  ZONE BOUCLE PHP  -->
-            <div class="message">
-                <div class="message-info">
-                    <img src="./images/users/adam-winger-aCajfuNQAN4-unsplash.jpg" alt="username">
-                    <div class="message-date-time">21.08 15:48</div>
-                </div>
-                <div class="message-content">
-                    Lorem ipsum dolor sit amet, consectetur .adipiscing elit, sed do eiusmod tempor
-                </div>
-            </div>
-            <!--  FIN BOUCLE PHP  -->
-
-            <div class="message end">
-                <div class="message-info reverse">
-                    <img src="./images/users/users65e09bebf3b893.14494778.jpg" alt="username">
-                    <div class="message-date-time">21.08 15:48</div>
-                </div>
-                <div class="message-content">
-                    Lorem ipsum dolor sit amet, consectetur .adipiscing elit, sed do eiusmod tempor
-                </div>
-            </div>
-            <div class="message">
-                <div class="message-info">
-                    <img src="./images/users/adam-winger-aCajfuNQAN4-unsplash.jpg" alt="username">
-                    <div class="message-date-time">21.08 15:48</div>
-                </div>
-                <div class="message-content">
-                    Lorem ipsum dolor sit amet, consectetur .adipiscing elit, sed do eiusmod tempor
-                </div>
+        <?php
+        if (isset($contact)) { ?>
+            <div  class="contact-discussion">
+                <img src="<?= $contact->getImage() ?? USER_IMAGE_DEFAULT_PATH ?>" alt="<?= $contact->getUsername() ?>">
+                <a href="index.php?action=publicUserAccount&id=<?= $contact->getId() ?>">
+                    <div class="contact-username">
+                        <?= $contact->getUsername() ?>
+                    </div>
+                </a>
             </div>
 
-        </div>
+            <div class="discussion">
+                <?php
+                foreach ($conversations as $conversation) {
+                    if ($conversation['interlocutor_id'] === $contact->getId()) { // Vérifiez si l'interlocuteur de la conversation est le même que le contact sélectionné
+                        foreach ($conversation['messages'] as $message) {
+                            if ($message->getIdSender() === $_SESSION['user']->getId()) { // Vérifiez si le message a été envoyé par l'utilisateur courant
+                                ?>
+                                <div class="message end">
+                                    <div class="message-info end">
+                                        <img src="<?= $_SESSION['user']->getImage() ?>" alt="username">
+                                        <div class="message-date-time"><?= $message->getCreationDateString() ?></div>
+                                    </div>
+                                    <div class="message-content"><?= $message->getContent() ?></div>
+                                </div>
+                                <?php
+                            } else { // Sinon, le message a été envoyé par l'interlocuteur
+                                ?>
+                                <div class="message">
+                                    <div class="message-info">
+                                        <img src="<?= $contact->getImage() ?>" alt="username">
+                                        <div class="message-date-time"><?= $message->getCreationDateString() ?></div>
+                                    </div>
+                                    <div class="message-content"><?= $message->getContent() ?></div>
+                                </div>
+                                <?php
+                            }
+                        }
+                    }
+                }
+                ?>
+            </div>
 
-        <div class="add-message-bloc">
-            <form action="">
-                <label for="add-message"></label>
-                <textarea id="add-message" name="message" placeholder="Tapez votre message ici"></textarea>
-                <input type="submit" value="Envoyer">
-            </form>
-        </div>
+            <div class="add-message-bloc">
+                <form  method="POST" action="index.php?action=addMessage" >
+                    <label for="add-message"></label>
+                    <textarea id="add-message" name="message"  minlength="1" maxlength="500" placeholder="Tapez votre message ici" required ><?= $messageToSend['content']  ?? '' ?></textarea>
+                    <input type="hidden" name="recipientId" value="<?= $contact->getId() ?>">
+                    <input type="submit" value="Envoyer">
+                </form>
+            </div>
+
+            <div class="error-box">
+                <?php
+                if (isset($errors)) {
+                    foreach ($errors as $error => $value) {
+                        echo $value . '<br/>';
+                    }
+                }
+                ?>
+            </div>
+
+        <?php } else  { ?>
+            <div class="discussion">
+                <!--  ZONE BOUCLE PHP  -->
+                <div class="message">Veuillez sélectionner une conversation ou créer en une</div>
+                <!--  FIN BOUCLE PHP  -->
+        <?php }
+        ?>
     </div>
 </section>
