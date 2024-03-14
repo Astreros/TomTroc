@@ -50,7 +50,7 @@ class BookManager extends AbstractEntityManager
     public function getSearchBookResultByTitle(string $userQuery): array|null
     {
         $books = [];
-//        Ajoute des délimiteurs de mots autour de la requête de l'utilisateur pour la recherche REGEX.
+//        Ajoute des délimiteurs de mots autour de la requête de l'utilisateur pour la recherche REGEX POSIX.
 //        Cela permet de s'assurer que la recherche correspond aux mots entiers et non à des sous-chaînes.
         $userQuery = "[[:<:]]" . $userQuery . "[[:>:]]";
 
