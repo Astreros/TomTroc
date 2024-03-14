@@ -50,12 +50,13 @@ class BookManager extends AbstractEntityManager
     public function getSearchBookResultByTitle(string $userQuery): array|null
     {
         $books = [];
+//        Ajoute des délimiteurs de mots autour de la requête de l'utilisateur pour la recherche REGEX.
+//        Cela permet de s'assurer que la recherche correspond aux mots entiers et non à des sous-chaînes.
         $userQuery = "[[:<:]]" . $userQuery . "[[:>:]]";
-        $userQuery2 = "^" . $userQuery;
 
-        $statement = "SELECT books.*, books.Id_books AS id, users.username AS seller FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE LOWER(title) REGEXP :query OR LOWER(title ) LIKE :query2 AND  available = TRUE";
+        $statement = "SELECT books.*, books.Id_books AS id, users.username AS seller FROM books LEFT JOIN users ON books.Id_users = users.Id_users WHERE LOWER(title) REGEXP :query AND available = TRUE";
 
-        $result = $this->database->query($statement, ['query' => $userQuery, 'query2' => $userQuery2]);
+        $result = $this->database->query($statement, ['query' => $userQuery]);
 
         while ($book = $result->fetch()) {
             $books[] = new Book($book);
