@@ -29,8 +29,14 @@
                 } else {
                     $formattedDate = $date->format('d/m');
                 }
+
+                $selected = null;
+
+                if (isset($contact) && $conversation['interlocutor_id'] === $contact->getId()) {
+                    $selected = 'selected';
+                }
                 ?>
-                <a href="index.php?action=messaging&contact=<?= $conversation['interlocutor_id']?>" class="discussion-link -selected">
+                <a href="index.php?action=messaging&contact=<?= $conversation['interlocutor_id']?>" class="discussion-link <?= $selected ? 'selected' : ''?>">
                     <img src="<?= $conversation['interlocutor']->getImage() ?>" alt="<?= $conversation['interlocutor']->getUsername() ?>">
                     <div class="discussion-info">
                         <p class="discussion-contact"><?= $conversation['interlocutor']->getUsername() ?></p>
