@@ -1,5 +1,4 @@
 <?php
-    $messageToSend = $tempData ?? null;
     if (isset($_SESSION['errors'], $_SESSION['tempData'])) {
         $errors = $_SESSION['errors'];
         $tempData = $_SESSION['tempData'];

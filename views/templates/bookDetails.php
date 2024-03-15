@@ -34,12 +34,23 @@
 
         <?php
             if ($bookUser->getId() !== $idCurrentUser) { ?>
-                <div class="book-details-contact">
-                    <a href="index.php?action=library" class="green-button">Envoyer un message</a>
-                </div>
+                <details class="book-details-contact">
+                    <summary><div class="green-button">Envoyer un message</div></summary>
+
+                    <div class="add-message-bloc">
+                        <form  method="POST" action="index.php?action=addMessage" >
+                            <label for="add-message"></label>
+                            <textarea id="add-message" name="message"  minlength="1" maxlength="500" placeholder="Tapez votre message ici" required ><?= $messageToSend['content']  ?? '' ?></textarea>
+                            <input type="hidden" name="recipientId" value="<?= $bookUser->getId() ?>">
+                            <input type="submit" value="Envoyer">
+                        </form>
+                    </div>
+                </details>
                 <?php
             }
         ?>
+
+
     </div>
 
 </section>

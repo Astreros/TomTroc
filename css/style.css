@@ -513,8 +513,15 @@ footer {
 
 .book-details-contact {
     display: flex;
-    margin: auto;
+    margin: auto 0;
+    padding: 0;
     flex-direction: column;
+}
+
+.book-details-contact summary {
+    list-style: none;
+
+    cursor: pointer;
 }
 
 .book-details-author {
