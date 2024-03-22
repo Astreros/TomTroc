@@ -15,20 +15,6 @@
                 <?php
                 $lastMessage = end($conversation['messages']);
 
-                // Crée un objet DateTime à partir de la date de création du message
-                $date = new DateTime($lastMessage->getCreationDateString());
-
-                // Détermine si le message a été envoyé aujourd'hui
-                $today = new DateTime('today');
-                $isToday = $date->format('Y-m-d') === $today->format('Y-m-d');
-
-                // Formate la date en fonction de la date d'envoi du message
-                if ($isToday) {
-                    $formattedDate = $date->format('H:i');
-                } else {
-                    $formattedDate = $date->format('d/m');
-                }
-
                 $selected = null;
 
                 if (isset($contact) && $conversation['interlocutor_id'] === $contact->getId()) {
@@ -41,7 +27,7 @@
                         <p class="discussion-contact"><?= $conversation['interlocutor']->getUsername() ?></p>
                         <p class="extract-last-message"><?=substr($lastMessage->getContent(), 0, 20) ?><?= strlen($lastMessage->getContent()) > 20 ? '...' : $lastMessage->getContent() ?></p>
                     </div>
-                    <div class="discussion-date-time"><?= $formattedDate ?></div>
+                    <div class="discussion-date-time"><?= $lastMessage->getShortDateTimeFormat() ?></div>
                 </a><?php
             } ?>
         </div>

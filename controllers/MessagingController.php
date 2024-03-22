@@ -73,6 +73,13 @@ class MessagingController
             $conversation['interlocutor'] = $interlocutor;
         }
 
+        uasort($conversations, static function ($a, $b) {
+            $lastMessageA = end($a['messages']);
+            $lastMessageB = end($b['messages']);
+
+            return $lastMessageB->getCreationDate() <=> $lastMessageA->getCreationDate();
+        });
+
         return $conversations;
     }
 

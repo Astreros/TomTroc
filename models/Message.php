@@ -46,4 +46,16 @@ class Message extends AbstractEntity
     {
         return $this->idRecipient;
     }
+
+    public function getShortDateTimeFormat(): string
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $this->getCreationDateString());
+        $today = new DateTime('today');
+
+        if ($date->format('Y-m-d') === $today->format('Y-m-d')) {
+            return $date->format('H:i');
+        }
+
+        return $date->format('d/m');
+    }
 }
