@@ -109,7 +109,11 @@ class BookController
 
 
     /**
+     * Méthode de contrôleur permettant de créer un livre
+     *
      * @throws Exception
+     *
+     * @return void
      */
     #[NoReturn] public function createBook(): void
     {
@@ -163,14 +167,18 @@ class BookController
     }
 
     /**
+     * Méthode de contrôleur permettant de supprimer un livre en fonction de son ID
+     *
      * @throws Exception
+     *
+     * @return void
      */
     #[NoReturn] public function deleteBook(): void
     {
         $idBookToBeDeleted = $_REQUEST['idBookToBeDeleted'];
 
         if (empty($idBookToBeDeleted)) {
-            Utils::redirectWithoutParamsInUrl('userAccount', ['deleteError' => 'Aucun livre à supprimer']);
+            Utils::redirectWithoutParamsInUrl('userAccount', ['errors' => 'Aucun livre à supprimer']);
         }
 
         $bookManager = new BookManager();

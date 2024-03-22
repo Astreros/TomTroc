@@ -3,7 +3,6 @@
         $errors = $_SESSION['errors'];
         $tempData = $_SESSION['tempData'];
     }
-
 ?>
 
 <section class="messaging">
