@@ -43,6 +43,8 @@ class BookController
      */
     #[NoReturn] public function UpdatingBook(): void
     {
+        Utils::checkIfUserIsConnected();
+
         $rawData = [
             'id'=> strip_tags(Utils::request('id')),
             'title' => strip_tags(Utils::request('title')),
@@ -117,6 +119,8 @@ class BookController
      */
     #[NoReturn] public function createBook(): void
     {
+        Utils::checkIfUserIsConnected();
+
         $userId = $_SESSION['user']->getId();
 
         $rawData = [
@@ -175,6 +179,8 @@ class BookController
      */
     #[NoReturn] public function deleteBook(): void
     {
+        Utils::checkIfUserIsConnected();
+
         $idBookToBeDeleted = $_REQUEST['idBookToBeDeleted'];
 
         if (empty($idBookToBeDeleted)) {
@@ -192,7 +198,6 @@ class BookController
 
         if ($imageBookToBeDeleted === null) {
             $bookManager->deleteBookById($idBookToBeDeleted);
-
         }
 
         Utils::deleteImageFile($imageBookToBeDeleted);
