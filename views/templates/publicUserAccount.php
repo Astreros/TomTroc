@@ -7,7 +7,6 @@
         <div class="user-informations">
             <div class="user-informations-image">
                 <img src="<?= $publicUserAccount->getImage() ?? USER_IMAGE_DEFAULT_PATH?>" alt="<?= $publicUserAccount->getUsername() ?>">
-                <a href="#">modifier</a>
             </div>
             <div class="user-informations-details">
                 <p class="user-informations-username"><?= $publicUserAccount->getUsername() ?></p>
@@ -36,7 +35,7 @@
                             <th class="user-library-details-title"><?= $book->getTitle() ?></th>
                             <th class="user-library-details-author"><?= $book->getAuthor() ?></th>
                             <th class="user-library-details-description"><?= substr($book->getDescription(), 0, 80) ?><?= strlen($book->getDescription()) > 80 ? '...' : ''?></th>
-                            </tr><?php
+                        </tr><?php
                         }
                     ?>
                 </tbody>
