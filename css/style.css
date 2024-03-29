@@ -845,7 +845,7 @@ input[type="submit"] {
 }
 
 .tab-active .user-library-details-author {
-    width: 15%;
+    width: 20%;
 }
 
 .tab-active .user-library-details-description {
@@ -853,7 +853,7 @@ input[type="submit"] {
 }
 
 .tab-active .user-library-details-available {
-    width: 20%;
+    width: 15%;
 }
 
 .user-library-details-available .available {
