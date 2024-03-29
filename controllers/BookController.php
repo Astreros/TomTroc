@@ -81,6 +81,12 @@ class BookController
                 $imagePath = $imagePath['message'];
             }
 
+            if ((strpos($rawData['oldImage'], BOOKS_IMAGE_DIRECTORY )) !== 0) {
+                Utils::redirectWithoutParamsInUrl('userAccount', [
+                    'errors' => "Le chemin d'accès de l'ancienne image n'est pas valide ou n'est pas autorisé"
+                ]);
+            }
+
             Utils::deleteImageFile($rawData['oldImage']);
 
         } else {
@@ -198,6 +204,12 @@ class BookController
 
         if ($imageBookToBeDeleted === null) {
             $bookManager->deleteBookById($idBookToBeDeleted);
+        }
+
+        if ((strpos($imageBookToBeDeleted, BOOKS_IMAGE_DIRECTORY)) !== 0) {
+            Utils::redirectWithoutParamsInUrl('userAccount', [
+                'errors' => "Le chemin d'accès de l'ancienne image n'est pas valide ou n'est pas autorisé"
+            ]);
         }
 
         Utils::deleteImageFile($imageBookToBeDeleted);

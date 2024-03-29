@@ -54,14 +54,14 @@ class UserController
         $password = Utils::request('password');
 
         if (empty($email) || empty($password)) {
-            Utils::redirectWithoutParamsInUrl('loginForm', ['emptyError' => "Tous les champs sont obligatoires."]);
+            Utils::redirectWithoutParamsInUrl('loginForm', ['errors' => "Tous les champs sont obligatoires."]);
         }
 
         $userManager = New UserManager();
         $user = $userManager->getUserByEmail($email);
 
         if ($user === null || !password_verify($password, $user->getPassword())) {
-            Utils::redirectWithoutParamsInUrl('loginForm', ['loginError' => "Identifiants incorrects."]);
+            Utils::redirectWithoutParamsInUrl('loginForm', ['errors' => "Identifiants incorrects."]);
         }
 
         $_SESSION['user'] = $user;
@@ -111,7 +111,7 @@ class UserController
         $userManager->addUser($user);
 
         Utils::redirectWithoutParamsInUrl('loginForm', [
-            'success' => 'Votre compte à été crée avec succès.'
+            'success' => 'Votre compte à été créé avec succès.'
         ]);
     }
 
@@ -121,6 +121,7 @@ class UserController
     #[NoReturn] public function updateUserImage(): void
     {
         Utils::checkIfUserIsConnected();
+
 
         $id = $_SESSION['user']->getId();
         $image = $_FILES['imageToUpload'];
@@ -145,6 +146,12 @@ class UserController
             ]);
         } else {
             $imagePath = $imagePath['message'];
+        }
+
+        if ((strpos($oldImage, USERS_IMAGE_DIRECTORY )) !== 0) {
+            Utils::redirectWithoutParamsInUrl('userAccount', [
+                'errors' => "Le chemin d'accès de l'ancienne image n'est pas valide ou n'est pas autorisé"
+            ]);
         }
 
         Utils::deleteImageFile($oldImage);

@@ -61,7 +61,8 @@ class MessagingController
 
             $conversations[$conversationKey]['messages'][] = $message;
         }
-
+ 
+        // Passage par référence de $conversation
         foreach ($conversations as &$conversation) {
             $userManager = new UserManager();
             $interlocutor = $userManager->getUserById($conversation['interlocutor_id']);
@@ -72,6 +73,8 @@ class MessagingController
 
             $conversation['interlocutor'] = $interlocutor;
         }
+
+        unset($conversation); // Détruit la variable $conversation après la boucle foreach
 
         uasort($conversations, static function ($a, $b) {
             $lastMessageA = end($a['messages']);

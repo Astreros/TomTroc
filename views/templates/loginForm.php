@@ -26,15 +26,15 @@
 
         <div class="error-box">
             <?php
-                if (isset($emptyError)) {
-                    echo $emptyError;
-                } elseif (isset($loginError)) {
-                    echo $loginError;
-                } elseif (isset($errors)) {
+            if (isset($errors)) {
+                if (is_array($errors)) {
                     foreach ($errors as $error => $value) {
-                        echo $value.'<br/>';
+                        echo $value . '<br/>';
                     }
+                } else {
+                    echo $errors;
                 }
+            }
             ?>
         </div>
 

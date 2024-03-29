@@ -91,8 +91,12 @@
             <div class="error-box">
                 <?php
                 if (isset($errors)) {
-                    foreach ($errors as $error => $value) {
-                        echo $value . '<br/>';
+                    if (is_array($errors)) {
+                        foreach ($errors as $error => $value) {
+                            echo $value . '<br/>';
+                        }
+                    } else {
+                        echo $errors;
                     }
                 }
                 ?>
