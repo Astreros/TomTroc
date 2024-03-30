@@ -204,6 +204,7 @@ class BookController
 
         if ($imageBookToBeDeleted === null) {
             $bookManager->deleteBookById($idBookToBeDeleted);
+            Utils::redirect('userAccount');
         }
 
         if ((strpos($imageBookToBeDeleted, BOOKS_IMAGE_DIRECTORY)) !== 0) {
