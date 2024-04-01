@@ -9,6 +9,7 @@
     $messagingController = new MessagingController();
     $userController = new UserController();
     $bookController = new BookController();
+    
     /**
      * @throws Exception
      */

@@ -58,4 +58,10 @@ class Message extends AbstractEntity
 
         return $date->format('d/m');
     }
+
+    public function getFrenchTimeFormat(): string
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $this->getCreationDateString());
+        return $date->format('d/m/Y H:i');
+    }
 }

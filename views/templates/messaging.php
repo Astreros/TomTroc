@@ -57,7 +57,7 @@
                                 <div class="message end">
                                     <div class="message-info end">
                                         <img src="<?= $_SESSION['user']->getImage() ?>" alt="username">
-                                        <div class="message-date-time"><?= $message->getCreationDateString() ?></div>
+                                        <div class="message-date-time"><?= $message->getFrenchTimeFormat() ?></div>
                                     </div>
                                     <div class="message-content"><?= $message->getContent() ?></div>
                                 </div>
