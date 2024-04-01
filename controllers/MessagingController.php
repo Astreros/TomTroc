@@ -67,10 +67,6 @@ class MessagingController
             $userManager = new UserManager();
             $interlocutor = $userManager->getUserById($conversation['interlocutor_id']);
 
-//            usort($conversation['messages'], static function ($a, $b) {
-//                return $a->getCreationDate() <=> $b->getCreationDate();
-//            });
-
             $conversation['interlocutor'] = $interlocutor;
         }
 
