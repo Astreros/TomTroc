@@ -2,7 +2,7 @@
 
 class MessageValidator implements ValidatorInterface
 {
-    const MESSAGE_CHECK = "/^[\p{L}\p{N}\p{P}\p{S}\p{Z}\p{Zl}\n\r]{1,500}$/u";
+    private const string MESSAGE_CHECK = "/^[\p{L}\p{N}\p{P}\p{S}\p{Z}\p{Zl}\n\r]{1,500}$/u";
 
     public function validate(array $data): array
     {
