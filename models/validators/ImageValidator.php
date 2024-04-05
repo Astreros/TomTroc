@@ -2,8 +2,8 @@
 
 class ImageValidator implements ValidatorInterface
 {
-    private const array ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpeg', 'image/png'];
-    private const int MAX_IMAGE_SIZE = 1048576 * 100; // 100 Mo
+    const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpeg', 'image/png'];
+    const MAX_IMAGE_SIZE = 1048576 * 100; // 100 Mo
 
     public function validate(array $data): array
     {

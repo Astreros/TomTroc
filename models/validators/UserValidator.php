@@ -2,9 +2,9 @@
 
 class UserValidator implements ValidatorInterface
 {
-    private const string USER_USERNAME_CHECK = "/^[a-zA-Z0-9_]{3,32}$/";
-    private const string USER_EMAIL_CHECK = "/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/";
-    private const string USER_PASSWORD_CHECK = "/^(?=.*[a-z])(?=.*[A-Z])[\w\s]{12,}$/";
+    const USER_USERNAME_CHECK = "/^[a-zA-Z0-9_]{3,32}$/";
+    const USER_EMAIL_CHECK = "/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/";
+    const USER_PASSWORD_CHECK = "/^(?=.*[a-z])(?=.*[A-Z])[\w\s]{12,}$/";
 
     public function validate(array $data): array
     {

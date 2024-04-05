@@ -5,6 +5,8 @@
     }
 ?>
 
+
+
 <section class="messaging">
     <div class="overall-threads">
         <h2>Messagerie</h2>
@@ -56,7 +58,7 @@
                                 ?>
                                 <div class="message end">
                                     <div class="message-info end">
-                                        <img src="<?= $_SESSION['user']->getImage() ?>" alt="username">
+                                        <img src="<?= $_SESSION['user']->getImage() ?? USER_IMAGE_DEFAULT_PATH ?>" alt="username">
                                         <div class="message-date-time"><?= $message->getFrenchTimeFormat() ?></div>
                                     </div>
                                     <div class="message-content"><?= $message->getContent() ?></div>
@@ -66,7 +68,7 @@
                                 ?>
                                 <div class="message">
                                     <div class="message-info">
-                                        <img src="<?= $contact->getImage() ?>" alt="username">
+                                        <img src="<?= $contact->getImage() ?? USER_IMAGE_DEFAULT_PATH ?>" alt="username">
                                         <div class="message-date-time"><?= $message->getCreationDateString() ?></div>
                                     </div>
                                     <div class="message-content"><?= $message->getContent() ?></div>

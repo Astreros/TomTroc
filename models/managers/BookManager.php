@@ -47,6 +47,25 @@ class BookManager extends AbstractEntityManager
         return null;
     }
 
+    public function getBookByIdAndUserId(int $idUser, int $idBook): Book|null
+    {
+        $statement = "SELECT * FROM BOOKS WHERE Id_users = :idUser AND Id_books = :idBook";
+
+        $result = $this->database->query($statement, [
+            'idUser' => $idUser,
+            'idBook' => $idBook
+        ]);
+
+        $book = $result->fetch();
+
+        if ($book) {
+            return new Book($book);
+        }
+
+        return null;
+    }
+
+
     public function getSearchBookResultByTitle(string $userQuery): array|null
     {
         $books = [];

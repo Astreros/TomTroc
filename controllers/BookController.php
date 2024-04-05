@@ -21,6 +21,7 @@ class BookController
     {
         Utils::checkIfUserIsConnected();
 
+        $userId = $_SESSION['user']->getId();
         $IdBookToBeUpdated = Utils::request('id');
 
         if (!$IdBookToBeUpdated) {
@@ -28,10 +29,10 @@ class BookController
         }
 
         $bookManager = new BookManager();
-        $bookToBeUpdated = $bookManager->getBookById($IdBookToBeUpdated);
+        $bookToBeUpdated = $bookManager->getBookByIdAndUserId($userId ,$IdBookToBeUpdated);
 
         if ($bookToBeUpdated === null) {
-            Utils::redirectWithoutParamsInUrl('userAccount', ['errorBookHasNotBeenFound' => 'Le livre à mettre à jour n\'a pas été trouvé. ']);
+            Utils::redirectWithoutParamsInUrl('userAccount', ['errorBookHasNotBeenFound' => 'Le livre à mettre à jour n\'a pas été trouvé.']);
         }
 
         $_SESSION['bookToBeUpdated'] = $bookToBeUpdated->toArray();
@@ -56,16 +57,15 @@ class BookController
         ];
 
         $bookValidator = new BookValidator();
-        $imageValidator = new ImageValidator();
-
         $bookErrors = $bookValidator->validate($rawData);
 
         if ($_FILES['imageToUpload']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $imageValidator = new ImageValidator();
             $imageErrors = $imageValidator->validate($rawData);
 
-            if (!empty($bookErrors) || !empty($imageErrors)) {
+            if (!empty($imageErrors)) {
                 Utils::redirectWithoutParamsInUrl('bookFormUpdate', [
-                    'errors' => array_merge($bookErrors, $imageErrors),
+                    'errors' => $imageErrors,
                     'tempData' => $rawData
                 ]);
             }
@@ -79,12 +79,6 @@ class BookController
                 ]);
             } else {
                 $imagePath = $imagePath['message'];
-            }
-
-            if ((strpos($rawData['oldImage'], BOOKS_IMAGE_DIRECTORY )) !== 0) {
-                Utils::redirectWithoutParamsInUrl('userAccount', [
-                    'errors' => "Le chemin d'accès de l'ancienne image n'est pas valide ou n'est pas autorisé"
-                ]);
             }
 
             Utils::deleteImageFile($rawData['oldImage']);
@@ -187,6 +181,7 @@ class BookController
     {
         Utils::checkIfUserIsConnected();
 
+        $userId = $_SESSION['user']->getId();
         $idBookToBeDeleted = $_REQUEST['idBookToBeDeleted'];
 
         if (empty($idBookToBeDeleted)) {
@@ -194,7 +189,7 @@ class BookController
         }
 
         $bookManager = new BookManager();
-        $bookToBeDeleted = $bookManager->getBookById($idBookToBeDeleted);
+        $bookToBeDeleted = $bookManager->getBookByIdAndUserId($userId ,$idBookToBeDeleted);
 
         if ($bookToBeDeleted === null) {
             Utils::redirectWithoutParamsInUrl('userAccount', ['errors' => 'Livre non trouvé.']);

@@ -148,12 +148,6 @@ class UserController
             $imagePath = $imagePath['message'];
         }
 
-        if ((strpos($oldImage, USERS_IMAGE_DIRECTORY )) !== 0) {
-            Utils::redirectWithoutParamsInUrl('userAccount', [
-                'errors' => "Le chemin d'accès de l'ancienne image n'est pas valide ou n'est pas autorisé"
-            ]);
-        }
-
         Utils::deleteImageFile($oldImage);
 
         $userManager = new UserManager();

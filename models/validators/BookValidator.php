@@ -2,9 +2,9 @@
 
 class BookValidator implements ValidatorInterface
 {
-    private const string BOOK_TITLE_CHECK = "/^[A-Za-z0-9\s.,!?;:'\"()-]{3,144}$/";
-    private const string BOOK_AUTHOR_CHECK = "/^[A-Za-z0-9\s.,()-]{3,32}$/";
-    private const string BOOK_DESCRIPTION_CHECK = "/^[\p{L}\p{N}\p{P}\p{S}\p{Z}\p{Zl}\n\r]{50,500}$/u";
+    const BOOK_TITLE_CHECK = "/^[A-Za-z0-9\s.,!?;:'\"()-]{3,144}$/";
+    const BOOK_AUTHOR_CHECK = "/^[A-Za-z0-9\s.,()-]{3,32}$/";
+    const BOOK_DESCRIPTION_CHECK = "/^[\p{L}\p{N}\p{P}\p{S}\p{Z}\p{Zl}\n\r]{50,500}$/u";
 
     public function validate(array $data): array
     {
